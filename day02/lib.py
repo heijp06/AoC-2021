@@ -11,13 +11,13 @@ def go(rows, part):
     depth = 0
     aim = 0
     for row in rows:
-        match row.split():
-            case "forward", arg:
-                value = int(arg)
+        command, arg = row.split()
+        match command, int(arg):
+            case "forward", value:
                 position += value
                 depth += aim * value
-            case "down", arg:
-                aim += int(arg)
-            case "up", arg:
-                aim -= int(arg)
+            case "down", value:
+                aim += value
+            case "up", value:
+                aim -= value
     return aim * position if part == 1 else depth * position
