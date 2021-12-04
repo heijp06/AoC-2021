@@ -1,23 +1,17 @@
 def part1(rows):
     numbers = [int(number) for number in rows[0].split(",")]
     boards = get_boards(rows, 2)
-    while True:
-        for number in numbers:
-            for board_index in range(len(boards) - 1, -1, -1):
-                board = boards[board_index]
-                for line in board:
-                    index = find(line, number)
-                    if index > -1:
-                        line[index] = -1
-            winner = get_winner(boards)
-            if (winner):
-                return get_result(winner) * number
+    for number in numbers:
+        for board in boards:
+            for line in board:
+                index = find(line, number)
+                if index > -1:
+                    line[index] = -1
+        winner = get_winner(boards)
+        if (winner):
+            return get_result(winner) * number
+    return -1
 
-def find(line, number):
-    try:
-        return line.index(number)
-    except ValueError:
-        return -1
 
 def part2(rows):
     numbers = [int(number) for number in rows[0].split(",")]
@@ -34,6 +28,7 @@ def part2(rows):
                 if len(boards) == 0:
                     return get_result(board) * number
 
+
 def get_boards(rows, index):
     boards = []
     last = len(rows) - 4
@@ -47,23 +42,27 @@ def get_boards(rows, index):
         index += 1
     return boards
 
+
+def find(line, number):
+    try:
+        return line.index(number)
+    except ValueError:
+        return -1
+
+
 def get_winner(boards):
     for board in boards:
         if is_winner(board):
             return board
     return None
 
+
 def is_winner(board):
     if any(line for line in board if all(number == -1 for number in line)):
         return True
     turn = list(zip(*board))
-    if any(line for line in turn if all(number == -1 for number in line)):
-        return True
-    return False
+    return any(line for line in turn if all(number == -1 for number in line))
 
 
 def get_result(board):
-    result = 0
-    for line in board:
-        result += sum(number for number in line if number != -1)
-    return result
+    return sum(sum(number for number in line if number != -1) for line in board)
