@@ -3,7 +3,8 @@ def part1(rows):
     boards = get_boards(rows, 2)
     while True:
         for number in numbers:
-            for board in boards:
+            for board_index in range(len(boards) - 1, -1, -1):
+                board = boards[board_index]
                 for line in board:
                     index = find(line, number)
                     if index > -1:
@@ -19,8 +20,19 @@ def find(line, number):
         return -1
 
 def part2(rows):
-    pass
-
+    numbers = [int(number) for number in rows[0].split(",")]
+    boards = get_boards(rows, 2)
+    for number in numbers:
+        for board_index in range(len(boards) - 1, -1, -1):
+            board = boards[board_index]
+            for line in board:
+                index = find(line, number)
+                if index > -1:
+                    line[index] = -1
+            if is_winner(board):
+                boards.remove(board)
+                if len(boards) == 0:
+                    return get_result(board) * number
 
 def get_boards(rows, index):
     boards = []
@@ -37,24 +49,18 @@ def get_boards(rows, index):
 
 def get_winner(boards):
     for board in boards:
-        if any(line for line in board if all(number == -1 for number in line)):
+        if is_winner(board):
             return board
-        turn = list(zip(*board))
-        if any(line for line in turn if all(number == -1 for number in line)):
-            return board
-        # diagonal = True
-        # for index in range(5):
-        #     if board[index][index] != -1:
-        #         diagonal = False
-        # if diagonal:
-        #     return board
-        # diagonal = True
-        # for index in range(5):
-        #     if board[index][4 - index] != -1:
-        #         diagonal = False
-        # if diagonal:
-        #     return board
     return None
+
+def is_winner(board):
+    if any(line for line in board if all(number == -1 for number in line)):
+        return True
+    turn = list(zip(*board))
+    if any(line for line in turn if all(number == -1 for number in line)):
+        return True
+    return False
+
 
 def get_result(board):
     result = 0

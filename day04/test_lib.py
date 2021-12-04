@@ -5,6 +5,9 @@ from lib import part1, part2
 def test_part1():
     assert part1(data) == 4512
 
+def test_part2():
+    assert part2(data) == 1924
+
 data = [
 "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1",
 "",
