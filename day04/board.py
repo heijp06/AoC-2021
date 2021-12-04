@@ -3,7 +3,7 @@ from itertools import chain
 
 class Board:
     def __init__(self, rows):
-        self.rows = rows
+        self.rows = list(rows)
 
     def sum_of_remaining(self):
         return sum(

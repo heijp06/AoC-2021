@@ -26,19 +26,17 @@ def part2(rows):
 
 def parse_input(rows):
     numbers = [int(number) for number in rows[0].split(",")]
-    boards = list(get_boards(rows, 2))
+    boards = list(get_boards(rows))
     return numbers, boards
 
 
-def get_boards(rows, index):
-    while index < len(rows) - 1:
-        board_rows = []
-        for row in rows[index:index+5]:
-            board_row = [int(number) for number in row.split()]
-            board_rows.append(board_row)
-            index += 1
-            yield Board(board_rows)
-        index += 1
+def get_boards(rows):
+    for index in range(2, len(rows), 6):
+        yield Board(
+            [int(number) for number in row.split()]
+            for row
+            in rows[index:index+5]
+        )
 
 
 def get_winner(boards):
