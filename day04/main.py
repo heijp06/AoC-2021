@@ -16,7 +16,7 @@ def clip(x):
     pyperclip.copy(x)
 
 
-rows = tuple(row for row in read_rows())
+rows = tuple(read_rows())
 x = part1(rows)
 print(f"Part 1: {x}")
 clip(x)

@@ -1,10 +1,12 @@
+from itertools import chain
+
+
 def part1(rows):
-    numbers = [int(number) for number in rows[0].split(",")]
-    boards = get_boards(rows, 2)
+    numbers, boards = parse_input(rows)
     for number in numbers:
         for board in boards:
             for line in board:
-                index = find(line, number)
+                index = line.index(number) if number in line else -1
                 if index > -1:
                     line[index] = -1
         winner = get_winner(boards)
@@ -14,20 +16,23 @@ def part1(rows):
 
 
 def part2(rows):
-    numbers = [int(number) for number in rows[0].split(",")]
-    boards = get_boards(rows, 2)
+    numbers, boards = parse_input(rows)
     for number in numbers:
         for board_index in range(len(boards) - 1, -1, -1):
             board = boards[board_index]
             for line in board:
-                index = find(line, number)
+                index = line.index(number) if number in line else -1
                 if index > -1:
                     line[index] = -1
             if is_winner(board):
                 boards.remove(board)
-                if len(boards) == 0:
+                if not boards:
                     return get_result(board) * number
 
+def parse_input(rows):
+    numbers = [int(number) for number in rows[0].split(",")]
+    boards = get_boards(rows, 2)
+    return numbers, boards
 
 def get_boards(rows, index):
     boards = []
@@ -43,13 +48,6 @@ def get_boards(rows, index):
     return boards
 
 
-def find(line, number):
-    try:
-        return line.index(number)
-    except ValueError:
-        return -1
-
-
 def get_winner(boards):
     for board in boards:
         if is_winner(board):
@@ -58,10 +56,12 @@ def get_winner(boards):
 
 
 def is_winner(board):
-    if any(line for line in board if all(number == -1 for number in line)):
-        return True
-    turn = list(zip(*board))
-    return any(line for line in turn if all(number == -1 for number in line))
+    return any(
+        line
+        for line
+        in chain(board, zip(*board))
+        if all(number == -1 for number in line)
+    )
 
 
 def get_result(board):
