@@ -32,11 +32,11 @@ def part2(rows):
 
 
 def print_boards(org_boards, boards, img):
+    if len(org_boards) != 100:
+        return
     stdout = sys.stdout
     with open(f"img/img{img:03d}.txt", "w") as f:
         sys.stdout = f
-        if len(org_boards) != 100:
-            return
         rows = 8
         columns = 13
         for row in range(rows):
