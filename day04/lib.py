@@ -11,9 +11,33 @@ def part1(rows):
             return winner.sum_of_remaining() * number
     return None
 
+def print_boards(org_boards, boards):
+    if len(org_boards) != 100:
+        return
+    for row in range(8):
+        if row:
+            print()
+        for board_row in range(5):
+            for column in range(13):
+                index = row * 10 + column
+                if index >= 100:
+                    continue
+                if column:
+                    print("  ", end='')
+                board = org_boards[index]
+                if board in boards:
+                    print_row(board.rows[board_row])
+                else:
+                    print_row([" "] * 5)
+            print()
+
+def print_row(row):
+    print(f"{row[0]:>2} {row[1]:>2} {row[2]:>2} {row[3]:>2} {row[4]:>2}", end='')
 
 def part2(rows):
     numbers, boards = parse_input(rows)
+    org_boards = list(boards)
+    print_boards(org_boards, boards)
     for number in numbers:
         for board in boards:
             board.mark(number)
