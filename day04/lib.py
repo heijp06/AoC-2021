@@ -7,7 +7,7 @@ def part1(rows):
         for board in boards:
             board.mark(number)
         winner = get_winner(boards)
-        if (winner):
+        if winner:
             return winner.sum_of_remaining() * number
     return None
 
