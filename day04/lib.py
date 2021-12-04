@@ -1,68 +1,48 @@
-from itertools import chain
+from board import Board
 
 
 def part1(rows):
     numbers, boards = parse_input(rows)
     for number in numbers:
         for board in boards:
-            for line in board:
-                index = line.index(number) if number in line else -1
-                if index > -1:
-                    line[index] = -1
+            board.mark(number)
         winner = get_winner(boards)
         if (winner):
-            return get_result(winner) * number
-    return -1
+            return winner.sum_of_remaining() * number
+    return None
 
 
 def part2(rows):
     numbers, boards = parse_input(rows)
     for number in numbers:
-        for board_index in range(len(boards) - 1, -1, -1):
-            board = boards[board_index]
-            for line in board:
-                index = line.index(number) if number in line else -1
-                if index > -1:
-                    line[index] = -1
-            if is_winner(board):
-                boards.remove(board)
-                if not boards:
-                    return get_result(board) * number
+        for board in boards:
+            board.mark(number)
+        new_boards = [board for board in boards if not board.is_winner()]
+        if not new_boards:
+            return boards[0].sum_of_remaining() * number
+        boards = new_boards
+    return None
+
 
 def parse_input(rows):
     numbers = [int(number) for number in rows[0].split(",")]
-    boards = get_boards(rows, 2)
+    boards = list(get_boards(rows, 2))
     return numbers, boards
 
+
 def get_boards(rows, index):
-    boards = []
-    last = len(rows) - 4
-    while(index < last):
-        board = []
-        for line in range(5):
-            line = [int(number) for number in rows[index].split()]
-            board.append(line)
+    while index < len(rows) - 1:
+        board_rows = []
+        for row in rows[index:index+5]:
+            board_row = [int(number) for number in row.split()]
+            board_rows.append(board_row)
             index += 1
-        boards.append(board)
+            yield Board(board_rows)
         index += 1
-    return boards
 
 
 def get_winner(boards):
     for board in boards:
-        if is_winner(board):
+        if board.is_winner():
             return board
     return None
-
-
-def is_winner(board):
-    return any(
-        line
-        for line
-        in chain(board, zip(*board))
-        if all(number == -1 for number in line)
-    )
-
-
-def get_result(board):
-    return sum(sum(number for number in line if number != -1) for line in board)
