@@ -2,20 +2,12 @@ import pytest
 from lib import part1, part2
 
 
+def test_part1():
+    assert part1(data) == 5
+
+
 def test_part2():
     assert part2(data) == 12
-
-def test_diagonal_topleft_bottomright():
-    assert part2([
-        "0,0 -> 2,2",
-        "0,1 -> 2,1"
-    ]) == 1
-
-def test_diagonal():
-    assert part2([
-        "2,2 -> 0,0",
-        "0,1 -> 2,1"
-    ]) == 1
 
 
 data = [
