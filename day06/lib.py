@@ -11,7 +11,7 @@ def part2(input):
 
 def go(input, days):
     fish = dict(Counter(input))
-    for _ in range(days):
+    for day in range(days):
         new_fish = defaultdict(int)
         for age, number in fish.items():
             if age:
