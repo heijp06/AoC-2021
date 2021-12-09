@@ -43,5 +43,5 @@ class Display:
                 char = self.lines[y][x]
                 color = color_table[char]
                 draw.text((margin + width * x, margin + height * y), self.lines[y][x], fill=color, font=font)
-        image.save(f"img/img{self.image_number:08d}.png")
+        image.save(f"img/img{self.image_number:08d}.jpg")
         self.image_number += 1
