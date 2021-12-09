@@ -1,15 +1,17 @@
-import pytest
-from lib import get_mapping, part1, part2
+from lib import part1, part2
 
 
 def test_part1():
     assert part1(data) == 26
-    
+
+
 def test_part2():
     assert part2(data) == 61229
 
+
 def test_part2_simple():
     assert part2(["cf | cf cf"]) == 11
+
 
 data = [
     "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe",

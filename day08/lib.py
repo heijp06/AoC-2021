@@ -1,5 +1,18 @@
 from itertools import permutations
 
+segments = [
+    [0, 1, 2, 4, 5, 6],
+    [2, 5],
+    [0, 2, 3, 4, 6],
+    [0, 2, 3, 5, 6],
+    [1, 2, 3, 5],
+    [0, 1, 3, 5, 6],
+    [0, 1, 3, 4, 5, 6],
+    [0, 2, 5],
+    [0, 1, 2, 3, 4, 5, 6],
+    [0, 1, 2, 3, 5, 6]
+]
+
 
 def part1(rows: list[str]) -> int:
     total = 0
@@ -19,7 +32,7 @@ def part2(rows: list[str]) -> int:
         input, output = row.split(" | ")
         inputs = input.split()
         outputs = output.split()
-        mapping = get_mapping(inputs + outputs)
+        mapping = get_mapping(inputs)
         value = 0
         for digit in outputs:
             index = mapping.index(set(digit))
@@ -30,25 +43,11 @@ def part2(rows: list[str]) -> int:
 
 
 def get_mapping(digits: list[str]) -> list[set[str]]:
-    for permutation in [list(p) for p in permutations("abcdefg")]:
-        zero = {permutation[i] for i in [0, 1, 2, 4, 5, 6]}
-        one = {permutation[i] for i in [2, 5]}
-        two = {permutation[i] for i in [0, 2, 3, 4, 6]}
-        three = {permutation[i] for i in [0, 2, 3, 5, 6]}
-        four = {permutation[i] for i in [1, 2, 3, 5]}
-        five = {permutation[i] for i in [0, 1, 3, 5, 6]}
-        six = {permutation[i] for i in [0, 1, 3, 4, 5, 6]}
-        seven = {permutation[i] for i in [0, 2, 5]}
-        eight = {permutation[i] for i in [0, 1, 2, 3, 4, 5, 6]}
-        nine = {permutation[i] for i in [0, 1, 2, 3, 5, 6]}
-        mapping = [zero, one, two, three, four, five, six, seven, eight, nine]
-        # if all({digit} in mapping for digit in digits):
-        #     return mapping
-        found = True
-        for digit in digits:
-            if not set(digit) in mapping:
-                found = False
-                break
-        if found:
+    for permutation in (list(p) for p in permutations("abcdefg")):
+        mapping = [
+            {permutation[i] for i in segments[number]}
+            for number in range(10)
+        ]
+        if all(set(digit) in mapping for digit in digits):
             return mapping
     raise ValueError("Not found.")
