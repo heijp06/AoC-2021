@@ -1,4 +1,3 @@
-import pytest
 from lib import part1, part2
 
 
@@ -9,9 +8,9 @@ def test_part1():
 def test_part2():
     assert part2(data) == 288957
 
+
 def test_part2_simple():
     assert part2(["("]) == 1
-
 
 
 data = [

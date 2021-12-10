@@ -1,8 +1,8 @@
 def part1(rows):
-    return sum(score(row) for row in rows)
+    return sum(score1(row) for row in rows)
 
 
-def score(row: str) -> int:
+def score1(row: str) -> int:
     stack = []
     for char in row:
         if char in "([{<":
@@ -25,7 +25,7 @@ def score(row: str) -> int:
 def part2(rows):
     scores = []
     for row in rows:
-        if part1(row) > 0:
+        if part1(row):
             continue
         result = ""
         char = completion(row)
@@ -33,9 +33,9 @@ def part2(rows):
             result += char
             row += char
             char = completion(row)
-        s = score2(result)
-        if s:
-            scores.append(s)
+        score = score2(result)
+        if score:
+            scores.append(score)
     scores.sort()
     return scores[len(scores) // 2]
 
@@ -49,13 +49,12 @@ def completion(row):
         if not stack:
             return ""
         open = stack.pop()
-        if char == ")" and open != "(":
-            return ""
-        if char == "]" and open != "[":
-            return ""
-        if char == "}" and open != "{":
-            return ""
-        if char == ">" and open != "<":
+        if (
+            char == ")" and open != "(" or
+            char == "]" and open != "[" or
+            char == "}" and open != "{" or
+            char == ">" and open != "<"
+        ):
             return ""
     if stack:
         char = stack.pop()
