@@ -1,8 +1,5 @@
 def part1(rows):
-    total = 0
-    for row in rows:
-        total += score(row)
-    return total
+    return sum(score(row) for row in rows)
 
 
 def score(row: str) -> int:
@@ -23,8 +20,69 @@ def score(row: str) -> int:
         if char == ">" and open != "<":
             return 25137
     return 0
-        
 
 
 def part2(rows):
-    pass
+    scores = []
+    for row in rows:
+        if part1(row) > 0:
+            continue
+        result = ""
+        char = completion(row)
+        while char:
+            result += char
+            row += char
+            char = completion(row)
+        s = score2(result)
+        if s:
+            scores.append(s)
+    scores.sort()
+    return scores[len(scores) // 2]
+
+
+def completion(row):
+    stack = []
+    for char in row:
+        if char in "([{<":
+            stack.append(char)
+            continue
+        if not stack:
+            return ""
+        open = stack.pop()
+        if char == ")" and open != "(":
+            return ""
+        if char == "]" and open != "[":
+            return ""
+        if char == "}" and open != "{":
+            return ""
+        if char == ">" and open != "<":
+            return ""
+    if stack:
+        char = stack.pop()
+        match char:
+            case "(":
+                return ")"
+            case "[":
+                return "]"
+            case "{":
+                return "}"
+            case "<":
+                return ">"
+    else:
+        return ""
+
+
+def score2(result):
+    total = 0
+    for char in result:
+        total *= 5
+        match char:
+            case ")":
+                total += 1
+            case "]":
+                total += 2
+            case "}":
+                total += 3
+            case ">":
+                total += 4
+    return total
