@@ -1,16 +1,21 @@
 from lib import part2
-from display import Display
+from text_grid_view import TextGridView
+from canvas import Canvas
+from PIL import ImageFont
 
-display = Display(10, 10)
-display.clear(".")
-display.write_image()
+font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
 
+grid = TextGridView(10, 10, font)
+grid.clear(".")
+
+canvas = Canvas(grid)
+canvas.save()
 
 def item_set(item, value):
     if not value:
         return
-    display[item] = str(value)
-    display.write_image()
+    grid[item] = str(value)
+    canvas.save()
 
 
 data = [
