@@ -1,39 +1,17 @@
-import copy
 from itertools import count
 
 
 def part1(rows: list[str], steps: int = 100) -> int:
     grid = get_grid(rows)
-    show(grid, 0)
     flashes = 0
-    for step in range(steps):
+    for _ in range(steps):
         increase(grid)
-        show(grid, step + 1)
         new_flashes, grid = ripple(grid)
-        show(grid, step + 1)
         while new_flashes:
             flashes += new_flashes
             new_flashes, grid = ripple(grid)
-            show(grid, step + 1)
         reset(grid)
-        # if step + 1 in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100):
-        #     show(grid, step + 1)
     return flashes
-
-
-def show(grid: list[list[int]], step: int) -> None:
-    width, height = size(grid)
-    if step:
-        print(f"After step {step}:")
-    else:
-        print("Before any step:")
-    for row in range(height):
-        for column in range(width):
-            val = grid[row][column]
-            s = str(val) if val < 10 else chr(ord('A') + val - 10)
-            print(s, end="")
-        print()
-    print()
 
 
 def get_grid(rows: list[str]) -> list[list[int]]:
@@ -96,24 +74,18 @@ def size(grid: list[list[int]]) -> tuple[int, int]:
 
 def part2(rows):
     grid = get_grid(rows)
-    show(grid, 0)
     flashes = 0
     for step in count():
         increase(grid)
-        show(grid, step + 1)
         new_flashes, grid = ripple(grid)
-        show(grid, step + 1)
         while new_flashes:
             flashes += new_flashes
             new_flashes, grid = ripple(grid)
-            show(grid, step + 1)
         if all(
-                all(octopus == -1 for octopus in row)
-                for row
-                in grid
-            ):
+            all(octopus == -1 for octopus in row)
+            for row
+            in grid
+        ):
             return step + 1
         reset(grid)
-        # if step + 1 in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100):
-        #     show(grid, step + 1)
     return flashes
