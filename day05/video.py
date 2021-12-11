@@ -1,6 +1,7 @@
 from lib import part2
 from text_grid_view import TextGridView
 from canvas import Canvas
+from border import Border
 from PIL import ImageFont
 
 font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
@@ -8,7 +9,9 @@ font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
 grid = TextGridView(10, 10, font)
 grid.clear(".")
 
-canvas = Canvas(grid)
+border = Border(20, grid)
+
+canvas = Canvas(border)
 canvas.save()
 
 def item_set(item, value):
