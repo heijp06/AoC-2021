@@ -2,6 +2,7 @@ from lib import part2
 from text_grid_view import TextGridView
 from canvas import Canvas
 from border import Border
+from stack_layout import StackLayout
 from PIL import ImageFont
 
 font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
@@ -11,7 +12,10 @@ grid.clear(".")
 
 border = Border(20, grid)
 
-canvas = Canvas(border)
+hlayout = StackLayout(StackLayout.HORIZONTAL, border, border)
+vlayout = StackLayout(StackLayout.VERTICAL, hlayout, border)
+
+canvas = Canvas(vlayout)
 canvas.save()
 
 def item_set(item, value):
