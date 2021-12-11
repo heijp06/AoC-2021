@@ -9,7 +9,10 @@ class Display:
         self.width = width
         self.height = height
         self.lines = [list(" " * self.width) for _ in range(self.height)]
+        self.font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
         self.image_number = 0
+        self.margin = 10
+        self.char_width, self.char_height = self.font.getsize("X")
 
     def __setitem__(self, index, char):
         if not isinstance(char, str) or len(char) != 1:
@@ -32,16 +35,16 @@ class Display:
             print("".join(line))
 
     def write_image(self):
-        font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
-        (width, height) = font.getsize("X")
-        margin = 10
-        image = Image.new("RGB", (margin * 2 + self.width * width, margin * 2 + self.height * height))
+        image = Image.new("RGB", (self.margin * 2 + self.width *
+                          self.char_width, self.margin * 2 + self.height * self.char_height))
         draw = ImageDraw.Draw(image)
-        color_table = { ".": 0xff0000, "1": 0xff5555, "2": 0xffaaaa, "3": 0xffffff}
+        color_table = {".": 0xff0000, "1": 0xff5555,
+                       "2": 0xffaaaa, "3": 0xffffff}
         for y in range(self.height):
             for x in range(self.width):
                 char = self.lines[y][x]
                 color = color_table[char]
-                draw.text((margin + width * x, margin + height * y), self.lines[y][x], fill=color, font=font)
+                draw.text((self.margin + self.char_width * x, self.margin +
+                          self.char_height * y), self.lines[y][x], fill=color, font=self.font)
         image.save(f"img/img{self.image_number:08d}.jpg")
         self.image_number += 1
