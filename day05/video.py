@@ -3,6 +3,7 @@ from text_grid_view import TextGridView
 from canvas import Canvas
 from border import Border
 from stack_layout import StackLayout
+from label import Label
 from PIL import ImageFont
 
 font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
@@ -10,18 +11,27 @@ font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
 grid = TextGridView(10, 10, font)
 grid.clear(".")
 
-border = Border(20, grid)
+label_part2 = Label("Part 2: ", font=font)
+label_count = Label("0 ", font=font)
+hlayout = StackLayout(StackLayout.HORIZONTAL, label_part2, label_count)
 
-hlayout = StackLayout(StackLayout.HORIZONTAL, border, border)
-vlayout = StackLayout(StackLayout.VERTICAL, hlayout, border)
+vlayout = StackLayout(StackLayout.VERTICAL, grid, hlayout)
 
-canvas = Canvas(vlayout)
+border = Border(20, vlayout)
+
+canvas = Canvas(border)
 canvas.save()
 
+count = 0
+
 def item_set(item, value):
+    global count
     if not value:
         return
     grid[item] = str(value)
+    if value == 2:
+        count += 1
+    label_count.text = str(count)
     canvas.save()
 
 
