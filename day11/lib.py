@@ -1,4 +1,5 @@
 import copy
+from itertools import count
 
 
 def part1(rows: list[str], steps: int = 100) -> int:
@@ -94,4 +95,25 @@ def size(grid: list[list[int]]) -> tuple[int, int]:
 
 
 def part2(rows):
-    pass
+    grid = get_grid(rows)
+    show(grid, 0)
+    flashes = 0
+    for step in count():
+        increase(grid)
+        show(grid, step + 1)
+        new_flashes, grid = ripple(grid)
+        show(grid, step + 1)
+        while new_flashes:
+            flashes += new_flashes
+            new_flashes, grid = ripple(grid)
+            show(grid, step + 1)
+        if all(
+                all(octopus == -1 for octopus in row)
+                for row
+                in grid
+            ):
+            return step + 1
+        reset(grid)
+        # if step + 1 in (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100):
+        #     show(grid, step + 1)
+    return flashes

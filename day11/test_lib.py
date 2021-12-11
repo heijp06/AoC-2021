@@ -6,6 +6,10 @@ def test_part1():
     assert part1(data) == 1656
 
 
+def test_part2():
+    assert part2(data) == 195
+
+
 @pytest.mark.parametrize("steps", range(1, 3))
 def test_part1_small(steps):
     assert part1(small, steps=1) == 9
