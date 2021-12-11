@@ -11,11 +11,13 @@ font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
 grid = TextGridView(10, 10, font)
 grid.clear(".")
 
+grid_border = Border([0, 0, 0, 20], grid)
+
 label_part2 = Label("Part 2: ", font=font)
 label_count = Label("0 ", font=font)
 hlayout = StackLayout(StackLayout.HORIZONTAL, label_part2, label_count)
 
-vlayout = StackLayout(StackLayout.VERTICAL, grid, hlayout)
+vlayout = StackLayout(StackLayout.VERTICAL, grid_border, hlayout)
 
 border = Border(20, vlayout)
 
