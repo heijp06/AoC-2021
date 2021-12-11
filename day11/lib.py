@@ -2,16 +2,32 @@ from itertools import count
 
 
 def part1(rows: list[str], steps: int = 100) -> int:
+    return go(rows, steps)
+
+
+def part2(rows):
+    return go(rows)
+
+
+def go(rows: list[str], steps: int = None) -> int:
     grid = get_grid(rows)
     flashes = 0
-    for _ in range(steps):
+    for step in count():
         increase(grid)
         new_flashes, grid = ripple(grid)
         while new_flashes:
             flashes += new_flashes
             new_flashes, grid = ripple(grid)
+        if not steps and all(
+            all(octopus == -1 for octopus in row)
+            for row
+            in grid
+        ):
+            return step + 1
         reset(grid)
-    return flashes
+        if step + 1 == steps:
+            return flashes
+    raise ValueError("Reached line after infinite loop.")
 
 
 def get_grid(rows: list[str]) -> list[list[int]]:
@@ -70,22 +86,3 @@ def in_range(grid: list[list[int]], row: int, column: int) -> bool:
 
 def size(grid: list[list[int]]) -> tuple[int, int]:
     return len(grid[0]), len(grid)
-
-
-def part2(rows):
-    grid = get_grid(rows)
-    flashes = 0
-    for step in count():
-        increase(grid)
-        new_flashes, grid = ripple(grid)
-        while new_flashes:
-            flashes += new_flashes
-            new_flashes, grid = ripple(grid)
-        if all(
-            all(octopus == -1 for octopus in row)
-            for row
-            in grid
-        ):
-            return step + 1
-        reset(grid)
-    return flashes
