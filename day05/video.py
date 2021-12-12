@@ -6,6 +6,7 @@ from stack_layout import StackLayout
 from label import Label
 from snow import Snow
 from PIL import ImageFont
+from datetime import datetime
 
 font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
 
@@ -23,6 +24,8 @@ vlayout = StackLayout(StackLayout.VERTICAL, grid_border, hlayout)
 border = Border(20, vlayout)
 
 snow = Snow(border, font=font)
+
+t0 = datetime.now()
 
 canvas = Canvas(snow)
 canvas.save(10)
@@ -54,3 +57,7 @@ data = [
 ]
 
 x = part2(data, observer=item_set)
+
+t1 = datetime.now()
+
+print(t1 - t0)
