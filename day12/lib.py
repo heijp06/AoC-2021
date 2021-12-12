@@ -31,9 +31,14 @@ def part2(rows: list[str]) -> int:
         cave1, cave2 = row.split("-")
         connections[cave1].append(cave2)
         connections[cave2].append(cave1)
-    routes = []
-    for small in (cave for cave in connections.keys() if cave.islower() and cave not in ["start", "end"]):
-        routes.append(("start", {"start"}, small, []))
+    routes = [
+        ("start", {"start"}, small, [])
+        for small in (
+            cave
+            for cave in connections
+            if cave.islower() and cave not in ["start", "end"]
+        )
+    ]
     count = 0
     known_routes = set()
     while routes:
