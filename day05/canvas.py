@@ -12,7 +12,8 @@ class Canvas:
         self.view.paint(image)
         return image
 
-    def save(self) -> None:
-        image = self.paint()
-        image.save(f"img/img{self.image_number:08d}.jpg")
-        self.image_number += 1
+    def save(self, count=1) -> None:
+        for _ in range(count):
+            image = self.paint()
+            image.save(f"img/img{self.image_number:08d}.jpg")
+            self.image_number += 1

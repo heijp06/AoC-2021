@@ -4,6 +4,7 @@ from canvas import Canvas
 from border import Border
 from stack_layout import StackLayout
 from label import Label
+from snow import Snow
 from PIL import ImageFont
 
 font = ImageFont.truetype(r"C:\Windows\Fonts\consola.ttf", 24)
@@ -21,8 +22,10 @@ vlayout = StackLayout(StackLayout.VERTICAL, grid_border, hlayout)
 
 border = Border(20, vlayout)
 
-canvas = Canvas(border)
-canvas.save()
+snow = Snow(border, font=font)
+
+canvas = Canvas(snow)
+canvas.save(10)
 
 count = 0
 
@@ -34,7 +37,7 @@ def item_set(item, value):
     if value == 2:
         count += 1
     label_count.text = str(count)
-    canvas.save()
+    canvas.save(10)
 
 
 data = [
