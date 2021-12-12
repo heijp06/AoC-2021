@@ -15,26 +15,23 @@ def part(rows: list[str], number: int) -> int:
         cave1, cave2 = row.split("-")
         connections[cave1].append(cave2)
         connections[cave2].append(cave1)
-    twice = set() if number == 1 else {
-        cave
-        for cave in connections
-        if cave.islower() and cave not in ["start", "end"]
-    }
     routes = [
-        ("start", {"start"}, twice)
+        ("start", {"start"}, number == 2)
     ]
     count = 0
     while routes:
         new_routes = []
         for current, visited, twice in routes:
             for cave in connections[current]:
+                if cave == "start":
+                    continue
                 if cave == "end":
                     count += 1
                 elif cave.isupper():
                     new_routes.append((cave, visited, twice))
                 elif cave in visited:
-                    if cave in twice:
-                        new_routes.append((cave, visited, set()))
+                    if twice:
+                        new_routes.append((cave, visited, False))
                 else:
                     new_visited = visited.copy()
                     new_visited.add(cave)
