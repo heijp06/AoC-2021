@@ -1,9 +1,20 @@
-import pytest
 from lib import part1, part2
 
 
 def test_part1():
     assert part1(data) == 17
+
+
+def test_part2():
+    assert part2(data) == 16
+
+
+def test_unequal_length_horizontal():
+    assert part1(["0,3", "", "fold along y=2"]) == 1
+
+
+def test_unequal_length_vertical():
+    assert part1(["3,0", "", "fold along x=2"]) == 1
 
 
 data = [
