@@ -1,15 +1,18 @@
 import pytest
-from lib import part1, part2
+from lib import go, part1, part2
 
 
 def test_part1():
     assert part1(data) == 1588
 
 
+def test_part2():
+    assert part2(data) == 2188189693529
+
+
 @pytest.mark.parametrize(["times", "expected"], [(0, 1), (1, 1), (10, 1588), (40, 2188189693529)])
-def test_part2(times, expected):
-    assert part2(data, times) == expected
-    # assert part2(data) == 2188189693529
+def test_go(times, expected):
+    assert go(data, times) == expected
 
 
 data = [
