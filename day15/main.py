@@ -1,6 +1,7 @@
 import csv
 import pyperclip
 from lib import part1, part2
+from datetime import datetime
 
 
 def read_rows(**kwargs):
@@ -16,6 +17,8 @@ def clip(x):
     pyperclip.copy(x)
 
 
+t0 = datetime.now()
+
 rows = tuple(row for row in read_rows())
 x = part1(rows)
 print(f"Part 1: {x}")
@@ -24,6 +27,10 @@ clip(x)
 x = part2(rows)
 print(f"Part 2: {x}")
 clip(x)
+
+t1 = datetime.now()
+
+print(t1 -t0)
 
 # data = [
 #     "1163751742",
