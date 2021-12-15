@@ -1,4 +1,3 @@
-from path_finder import PathFinder
 import copy
 
 
@@ -24,7 +23,7 @@ def go(data: list[list[int]]) -> int:
     while path_finders:
         print(counter, len(path_finders), risk)
         counter += 1
-        new_path_finders = []
+        new_path_finders = {}
         for (x0, y0), risk0, seen in path_finders:
             for direction in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 dx, dy = direction
@@ -43,8 +42,8 @@ def go(data: list[list[int]]) -> int:
                 line[x1] = new_risk
                 new_seen = seen.copy()
                 new_seen.add((x0, y0))
-                new_path_finders.append(((x1, y1), new_risk, new_seen))
-        path_finders = new_path_finders
+                new_path_finders[(x1, y1)] = (((x1, y1), new_risk, new_seen))
+        path_finders = list(new_path_finders.values())
     return risk
 
 

@@ -1,6 +1,5 @@
 import pytest
 from lib import get_data, max_bottom_right, part1, part2
-from path_finder import PathFinder
 
 
 data = [
@@ -47,8 +46,3 @@ def test_get_data():
 @pytest.mark.parametrize(["grid", "expected"], ((data, 40), (other, 16)))
 def test_max_bottom_right(grid, expected):
     assert max_bottom_right(get_data(grid, 1)) == expected
-
-
-def test_manhattan_distance():
-    path_finder = PathFinder([[1, 1], [1, 1]])
-    assert path_finder.manhattan_distance_to_end() == 2
