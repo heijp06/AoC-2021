@@ -1,5 +1,6 @@
 from path_finder import PathFinder
 
+
 def part1(rows: list[str]) -> int:
     risk = max_bottom_right(rows)
     data = get_data(rows)
@@ -19,7 +20,7 @@ def part1(rows: list[str]) -> int:
                     continue
                 key = (new_path_finder.position, new_path_finder.seen)
                 if (new_path_finder.position in risks and
-                    new_path_finder.risk >= risks[new_path_finder.position]):
+                        new_path_finder.risk >= risks[new_path_finder.position]):
                     continue
                 risks[new_path_finder.position] = new_path_finder.risk
                 if key not in seen:
@@ -29,27 +30,16 @@ def part1(rows: list[str]) -> int:
     return risk
 
 
-
-
-# def add_path(data, result, paths, pos, seen, total) -> int:
-#     x, y = pos
-#     if x >= 0 and y >= 0 and x < len(data) and y < len(data) and pos not in seen:
-#         new_seen = seen.copy()
-#         new_seen.add(pos)
-#         new_total = total + data[y][x]
-#         if new_total < result:
-#             paths.add((pos, result, new_seen, new_total))
-            
-
-
 def part2(rows):
     pass
+
 
 def get_data(rows: list[str]) -> list[list[int]]:
     return [
         [int(level) for level in row]
         for row in rows
     ]
+
 
 def max_bottom_right(rows: list[list[int]]) -> int:
     data = get_data(rows)
