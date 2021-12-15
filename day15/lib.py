@@ -1,48 +1,75 @@
 from path_finder import PathFinder
+import copy
 
 
 def part1(rows: list[str]) -> int:
-    risk = max_bottom_right(rows)
-    data = get_data(rows)
-    path_finders = [PathFinder(data)]
-    risks = {(0, 0): 0}
+    data = get_data(rows, 1)
+    return go(data)
+
+
+def part2(rows: list[str]) -> int:
+    data = get_data(rows, 5)
+    return go(data)
+
+
+def go(data: list[list[int]]) -> int:
+    risk = max_bottom_right(data)
+    path_finders = [((0, 0), 0, set())]
+    size = len(data)
+    risks = [
+        [risk for _ in range(size)]
+        for _ in range(size)
+    ]
+    counter = 0
     while path_finders:
-        print(len(path_finders), risk)
+        print(counter, len(path_finders), risk)
+        counter += 1
         new_path_finders = []
-        seen = set()
-        for path_finder in path_finders:
+        for (x0, y0), risk0, seen in path_finders:
             for direction in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                new_path_finder = path_finder.move(direction)
-                if not new_path_finder.valid() or new_path_finder.minimum_risk() >= risk:
+                dx, dy = direction
+                x1, y1 = x0 + dx, y0 + dy
+                if (x1, y1) in seen or x1 < 0 or y1 < 0 or x1 >= size or y1 >= size:
                     continue
-                if new_path_finder.at_end():
-                    risk = min(risk, new_path_finder.risk)
+                new_risk = risk0 + data[y1][x1]
+                line = risks[y1]
+                if new_risk >= line[x1]:
                     continue
-                key = (new_path_finder.position, new_path_finder.seen)
-                if (new_path_finder.position in risks and
-                        new_path_finder.risk >= risks[new_path_finder.position]):
+                if new_risk + size - 1 - x1 + size - 1 - y1 >= risk:
                     continue
-                risks[new_path_finder.position] = new_path_finder.risk
-                if key not in seen:
-                    seen.add(key)
-                    new_path_finders.append(new_path_finder)
+                if x1 == size - 1 and y1 == size - 1:
+                    risk = min(risk, new_risk)
+                    continue
+                line[x1] = new_risk
+                new_seen = seen.copy()
+                new_seen.add((x0, y0))
+                new_path_finders.append(((x1, y1), new_risk, new_seen))
         path_finders = new_path_finders
     return risk
 
 
-def part2(rows):
-    pass
-
-
-def get_data(rows: list[str]) -> list[list[int]]:
-    return [
+def get_data(rows: list[str], repeat: int) -> list[list[int]]:
+    top_left = [
         [int(level) for level in row]
         for row in rows
     ]
+    size = len(top_left)
+    data = []
+    for row in range(repeat * size):
+        r, y = divmod(row, size)
+        line = []
+        for column in range(repeat * size):
+            c, x = divmod(column, size)
+            value = top_left[y][x] + r + c
+            if value > 9:
+                value -= 9
+            line.append(value)
+        data.append(line)
+    return data
 
 
-def max_bottom_right(rows: list[list[int]]) -> int:
-    data = get_data(rows)
+def max_bottom_right(grid: list[list[int]]) -> int:
+    data = copy.deepcopy(grid)
     size = len(data)
     for diagonal in range(1, 2 * size):
         for x in range(size):

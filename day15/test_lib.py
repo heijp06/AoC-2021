@@ -1,5 +1,5 @@
 import pytest
-from lib import max_bottom_right, part1, part2
+from lib import get_data, max_bottom_right, part1, part2
 from path_finder import PathFinder
 
 
@@ -30,9 +30,23 @@ def test_part1(grid, expected):
     assert part1(grid) == expected
 
 
+def test_part2():
+    assert part2(data) == 315
+
+
+def test_get_data():
+    assert get_data(["8"], 5) == [
+        [8, 9, 1, 2, 3],
+        [9, 1, 2, 3, 4],
+        [1, 2, 3, 4, 5],
+        [2, 3, 4, 5, 6],
+        [3, 4, 5, 6, 7]
+    ]
+
+
 @pytest.mark.parametrize(["grid", "expected"], ((data, 40), (other, 16)))
 def test_max_bottom_right(grid, expected):
-    assert max_bottom_right(grid) == expected
+    assert max_bottom_right(get_data(grid, 1)) == expected
 
 
 def test_manhattan_distance():
