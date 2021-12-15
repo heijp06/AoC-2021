@@ -36,5 +36,5 @@ def test_max_bottom_right(grid, expected):
 
 
 def test_manhattan_distance():
-    path_finder = PathFinder(2)
+    path_finder = PathFinder([[1, 1], [1, 1]])
     assert path_finder.manhattan_distance_to_end() == 2
