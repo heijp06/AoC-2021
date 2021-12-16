@@ -1,5 +1,5 @@
 import pytest
-from lib import get_data, max_bottom_right, part1, part2
+from lib import get_data, part1, part2
 
 
 data = [
@@ -41,8 +41,3 @@ def test_get_data():
         [2, 3, 4, 5, 6],
         [3, 4, 5, 6, 7]
     ]
-
-
-@pytest.mark.parametrize(["grid", "expected"], ((data, 40), (other, 16)))
-def test_max_bottom_right(grid, expected):
-    assert max_bottom_right(get_data(grid, 1)) == expected

@@ -1,6 +1,3 @@
-import copy
-
-
 def part1(rows: list[str]) -> int:
     data = get_data(rows, 1)
     return go(data)
@@ -12,9 +9,9 @@ def part2(rows: list[str]) -> int:
 
 
 def go(data: list[list[int]]) -> int:
-    risk = max_bottom_right(data)
     path_finders = [((0, 0), 0, set())]
     size = len(data)
+    risk = 2 * size * 9
     risks = [
         [risk for _ in range(size)]
         for _ in range(size)
@@ -65,19 +62,3 @@ def get_data(rows: list[str], repeat: int) -> list[list[int]]:
             line.append(value)
         data.append(line)
     return data
-
-
-def max_bottom_right(grid: list[list[int]]) -> int:
-    data = copy.deepcopy(grid)
-    size = len(data)
-    for diagonal in range(1, 2 * size):
-        for x in range(size):
-            y = diagonal - x
-            if y >= 0 and y < size:
-                if y == 0:
-                    data[y][x] += data[y][x - 1]
-                elif x == 0:
-                    data[y][x] += data[y - 1][x]
-                else:
-                    data[y][x] += min(data[y - 1][x], data[y][x - 1])
-    return data[size - 1][size - 1] - data[0][0]
