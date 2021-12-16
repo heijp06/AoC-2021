@@ -1,61 +1,74 @@
 from __future__ import annotations
 
 
-def parse(input: str) -> Packet:
-    bits = convert_hex(input)
-    version, bits = get_int(bits, 3)
-    type_id, bits = get_int(bits, 3)
-
-    match type_id:
-        case 4:
-            return parse_literal(version, type_id, bits)
-        case 6:
-            return parse_operator(version, type_id, bits)
+def parse(data: str) -> Packet:
+    parser = Parser(data)
+    return parser.parse_packet()
 
 
-def convert_hex(input: str) -> str:
-    return "".join(
-        "{0:04b}".format(int(hex_digit, base=16)) for hex_digit in input
-    )
+class Parser:
+    def __init__(self, data: str) -> None:
+        self.set_bits(data)
+        self.index = 0
 
+    def parse_packet(self) -> Packet:
+        version = self.get_int(3)
+        type_id = self.get_int(3)
 
-def parse_literal(version: int, type_id: int, bits: int) -> LiteralPacket:
-    parsing = 1
-    binary = ""
-    while parsing:
-        parsing, bits = get_int(bits, 1)
-        nybble, bits = split_at(bits, 4)
-        binary += nybble
-    value = int(binary, base=2)
-    return LiteralPacket(version, type_id, value)
+        if type_id == 4:
+            return self.parse_literal(version, type_id)
+        else:
+            return self.parse_operator(version, type_id)
 
+    def set_bits(self, data: str) -> str:
+        self.bits = "".join(
+            "{0:04b}".format(int(hex_digit, base=16)) for hex_digit in data
+        )
 
-def parse_operator(version: int, type_id: int, bits: int) -> OperatorPacket:
-    length_type_id, bits = get_int(bits, 1)
-    if length_type_id:
-        packets = fixed_number_of_packets(bits)
-    else:
-        packets = fixed_length_packets(bits)
-    return OperatorPacket(version, type_id, packets)
+    def get_int(self, length: int) -> int:
+        field = self.get_string(length)
+        return int(field, base=2)
 
-def fixed_number_of_packets(bits: str) -> list[Packet]:
-    pass
+    def get_string(self, length: int) -> str:
+        start = self.index
+        end = start + length
+        self.index = end
+        return self.bits[start:end]
 
-def fixed_length_packets(bits: str) -> list[Packet]:
-    length, bits = get_int(bits, 15)
-    data, bits = split_at(bits, length)
-    packets = []
-    # while data:
-    #     packet, data = parse
+    def parse_literal(self, version: int, type_id: int) -> LiteralPacket:
+        parsing = 1
+        binary = ""
+        while parsing:
+            parsing = self.get_int(1)
+            nybble = self.get_string(4)
+            binary += nybble
+        value = int(binary, base=2)
+        return LiteralPacket(version, type_id, value)
 
-def get_int(bits: str, index: int) -> tuple[int, str]:
-    field, bits = split_at(bits, index)
-    return int(field, base=2), bits
+    def parse_operator(self, version: int, type_id: int) -> OperatorPacket:
+        length_type_id = self.get_int(1)
+        if length_type_id:
+            packets = self.fixed_number_of_packets()
+        else:
+            packets = self.fixed_length_packets()
+        return OperatorPacket(version, type_id, packets)
 
+    def fixed_number_of_packets(self) -> list[Packet]:
+        count = self.get_int(11)
+        packets = []
+        for _ in range(count):
+            packet = self.parse_packet()
+            packets.append(packet)
+        return packets
 
-def split_at(bits: str, index: int) -> tuple[str, str]:
-    return bits[:index], bits[index:]
-
+    def fixed_length_packets(self) -> list[Packet]:
+        length = self.get_int(15)
+        packets = []
+        stop = self.index + length
+        while self.index < stop:
+            packet = self.parse_packet()
+            packets.append(packet)
+        return packets
 
 class Packet():
     def __init__(self, version: int, type_id: int) -> None:
@@ -67,8 +80,10 @@ class LiteralPacket(Packet):
     def __init__(self, version: int, type_id: int, value: int) -> None:
         super().__init__(version, type_id)
         self.value = value
+        self.packets = []
 
 
 class OperatorPacket(Packet):
     def __init__(self, version: int, type_id: int, packets: list[Packet]) -> None:
         super().__init__(version, type_id)
+        self.packets = packets
