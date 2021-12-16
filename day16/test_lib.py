@@ -2,6 +2,15 @@ import pytest
 from lib import part1, part2
 from packet import parse
 
+@pytest.mark.parametrize(["data", "expected"], (
+    ("8A004A801A8002F478", 16),
+    ("620080001611562C8802118E34", 12),
+    ("C0015000016115A2E0802F182340", 23),
+    ("A0016C880162017C3686B18A3D4780", 31)
+))
+def test_part1(data, expected):
+    assert part1(data) == expected
+
 
 def test_parse_1():
     data = "D2FE28"
