@@ -9,39 +9,26 @@ def part2(rows: list[str]) -> int:
 
 
 def go(data: list[list[int]]) -> int:
-    path_finders = [((0, 0), 0, set())]
+    positions = {(0, 0)}
     size = len(data)
     risk = 2 * size * 9
-    risks = [
-        [risk for _ in range(size)]
-        for _ in range(size)
-    ]
-    counter = 0
-    while path_finders:
-        print(counter, len(path_finders), risk)
-        counter += 1
-        new_path_finders = {}
-        for (x0, y0), risk0, seen in path_finders:
-            for direction in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
-                dx, dy = direction
+    risks = [[risk] * size for _ in range(size)]
+    risks[0][0] = 0
+    while positions:
+        new_positions = set()
+        for x0, y0 in positions:
+            for dx, dy in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
                 x1, y1 = x0 + dx, y0 + dy
-                if (x1, y1) in seen or x1 < 0 or y1 < 0 or x1 >= size or y1 >= size:
+                if x1 < 0 or y1 < 0 or x1 >= size or y1 >= size:
                     continue
-                new_risk = risk0 + data[y1][x1]
-                line = risks[y1]
-                if new_risk >= line[x1]:
+                new_risk = risks[y0][x0] + data[y1][x1]
+                if new_risk >= risks[y1][x1]:
                     continue
-                if new_risk + size - 1 - x1 + size - 1 - y1 >= risk:
-                    continue
-                if x1 == size - 1 and y1 == size - 1:
-                    risk = min(risk, new_risk)
-                    continue
-                line[x1] = new_risk
-                new_seen = seen.copy()
-                new_seen.add((x0, y0))
-                new_path_finders[(x1, y1)] = (((x1, y1), new_risk, new_seen))
-        path_finders = list(new_path_finders.values())
-    return risk
+                risks[y1][x1] = new_risk
+                if x1 != size - 1 or y1 != size - 1:
+                    new_positions.add((x1, y1))
+        positions = new_positions
+    return risks[size - 1][size - 1]
 
 
 def get_data(rows: list[str], repeat: int) -> list[list[int]]:
