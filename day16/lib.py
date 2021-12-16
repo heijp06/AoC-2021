@@ -7,7 +7,8 @@ def part1(data: str) -> int:
 
 
 def part2(data):
-    pass
+    packet = parse(data)
+    return packet.get_value()
 
 
 def sum_of_versions(packet: Packet):

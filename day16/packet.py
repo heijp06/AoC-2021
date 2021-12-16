@@ -1,4 +1,6 @@
 from __future__ import annotations
+from math import prod
+from operator import gt, lt, eq
 
 
 def parse(data: str) -> Packet:
@@ -70,6 +72,7 @@ class Parser:
             packets.append(packet)
         return packets
 
+
 class Packet():
     def __init__(self, version: int, type_id: int) -> None:
         self.version = version
@@ -82,8 +85,19 @@ class LiteralPacket(Packet):
         self.value = value
         self.packets = []
 
+    def get_value(self) -> int:
+        return self.value
+
 
 class OperatorPacket(Packet):
     def __init__(self, version: int, type_id: int, packets: list[Packet]) -> None:
         super().__init__(version, type_id)
         self.packets = packets
+
+    def get_value(self) -> int:
+        if self.type_id <= 3:
+            func = [sum, prod, min, max][self.type_id]
+            return func(p.get_value() for p in self.packets)
+        else:
+            op = [gt, lt, eq][self.type_id - 5]
+            return op(self.packets[0].get_value(), self.packets[1].get_value())
