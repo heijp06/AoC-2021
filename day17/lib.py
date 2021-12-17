@@ -1,11 +1,14 @@
 import re
 from math import sqrt
 
+
 def part1(data):
-    pass
+    _, (y_min, _) = get_positions(data)
+    speed = abs(y_min) - 1
+    return speed * (speed + 1) // 2
 
 
-def part2(data):
+def part2(data):  # sourcery skip: use-assigned-variable
     (x_min, x_max), (y_min, y_max) = get_positions(data)
     vx_min = int(sqrt(2 * x_min))
     vx_max = x_max
@@ -19,13 +22,13 @@ def part2(data):
             x, y = 0, 0
             while x <= x_max and y >= y_min:
                 if x >= x_min and y <= y_max:
-                    print(vx0, vy0)
                     initial_velocities.add((vx0, vy0))
                 x += vx
                 y += vy
                 vx = max(0, vx - 1)
                 vy -= 1
     return len(initial_velocities)
+
 
 def get_positions(data):
     match = re.match(r"target area: x=(\d+)..(\d+), y=-(\d+)..-(\d+)", data)
