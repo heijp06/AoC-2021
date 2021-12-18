@@ -146,6 +146,7 @@ class PairSnailfish(Snailfish):
         return self.left.split() or self.right.split()
 
     def replace(self, child: Snailfish, replacement: Snailfish) -> None:
+        replacement._parent = self
         if child == self.left:
             self.left = replacement
         else:
@@ -171,4 +172,12 @@ class RootSnailFish(Snailfish):
         return self.child.split()
 
     def replace(self, child: Snailfish, replacement: Snailfish) -> None:
+        replacement._parent = self
         self.child = replacement
+
+    def reduce(self) -> None:
+        changed = True
+        while changed:
+            while self.explode():
+                pass
+            changed = self.split()

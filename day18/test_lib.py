@@ -1,6 +1,6 @@
 import pytest
 from lib import part1, part2
-from snailfish import Parser, RootSnailFish, Snailfish, parse
+from snailfish import Parser, RootSnailFish, Snailfish, ValueSnailfish, parse
 
 
 @pytest.mark.parametrize(["row", "expected"], (
@@ -27,6 +27,8 @@ def test_magnitude(row, expected):
     ("[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]",
      True, "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]"),
     ("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", True, "[[3,[2,[8,0]]],[9,[5,[7,0]]]]"),
+    ("[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]",
+     True, "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"),
 ))
 def test_explode(row, result, expected):
     snailfish = parse(row)
@@ -77,3 +79,33 @@ def test_split(row, expected):
 
     assert snailfish.split()
     assert str(snailfish) == expected
+
+
+def test_reduce():
+    snailfish = parse("[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]")
+    snailfish.reduce()
+
+    assert str(snailfish) == "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
+
+def test_root_replace():
+    snailfish = parse("1")
+    value = ValueSnailfish(2)
+    
+    snailfish.replace(snailfish.child, value)
+
+    assert snailfish.child == value
+    assert value.parent == snailfish
+
+def test_pair_replace():
+    snailfish = parse("[1,2]")
+    pair = snailfish.child
+    left = ValueSnailfish("3")
+    right = ValueSnailfish("4")
+
+    pair.replace(pair.left, left)
+    pair.replace(pair.right, right)
+
+    assert pair.left == left
+    assert pair.right == right
+    assert left.parent == pair
+    assert right.parent == pair
