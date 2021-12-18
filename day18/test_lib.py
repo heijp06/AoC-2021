@@ -1,6 +1,6 @@
 import pytest
 from lib import part1, part2
-from snailfish import Parser, Snailfish, parse
+from snailfish import Parser, RootSnailFish, Snailfish, parse
 
 
 @pytest.mark.parametrize(["row", "expected"], (
@@ -46,7 +46,7 @@ def test_explode(row, result, expected):
     ("[1,[[[2,3],4],5]]", "1", "2"),
 ))
 def test_first_left_and_first_right(row, first_left, first_right):
-    snailfish = parse(row)
+    snailfish = parse(row).child
 
     assert str(snailfish.left.first_right()) == first_right
     assert str(snailfish.left.first_left()) == "None"
@@ -60,5 +60,20 @@ def test_parent():
 
     snailfish = parse("[1,2]")
     assert snailfish.parent is None
-    assert snailfish.left.parent == snailfish
-    assert snailfish.right.parent == snailfish
+    assert snailfish.child.left.parent == snailfish.child
+    assert snailfish.child.right.parent == snailfish.child
+
+
+@pytest.mark.parametrize(["row", "expected"], (
+    ("10", "[5,5]"),
+    ("11", "[5,6]"),
+    ("12", "[6,6]"),
+    ("[[[[0,7],4],[15,[0,13]]],[1,1]]", "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]"),
+    ("[[[[0,7],4],[[7,8],[0,13]]],[1,1]]",
+     "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]"),
+))
+def test_split(row, expected):
+    snailfish = parse(row)
+
+    assert snailfish.split()
+    assert str(snailfish) == expected

@@ -3,9 +3,9 @@ from abc import ABC, abstractmethod
 import re
 
 
-def parse(row: str) -> Snailfish:
+def parse(row: str) -> RootSnailfish:
     parser = Parser(row)
-    return parser.parse()
+    return RootSnailFish(parser.parse())
 
 
 class Parser():
@@ -50,17 +50,25 @@ class Snailfish(ABC):
     def explode(self, depth=0) -> bool:
         pass
 
+    @abstractmethod
+    def split(self) -> bool:
+        pass
+
+    @abstractmethod
+    def replace(self, child: Snailfish, replacement: Snailfish) -> None:
+        pass
+
     @property
-    def parent(self) -> PairSnailfish:
+    def parent(self) -> Snailfish:
         return self._parent
 
     def first_left(self) -> ValueSnailfish:
         current = self
-        if not current.parent:
+        if not current.parent or isinstance(current.parent, RootSnailFish):
             return None
         while current == current.parent.left:
             current = current.parent
-            if not current.parent:
+            if not current.parent or isinstance(current.parent, RootSnailFish):
                 return None
         current = current.parent.left
         while not isinstance(current, ValueSnailfish):
@@ -69,11 +77,11 @@ class Snailfish(ABC):
 
     def first_right(self) -> ValueSnailfish:
         current = self
-        if not current.parent:
+        if not current.parent or isinstance(current.parent, RootSnailFish):
             return None
         while current == current.parent.right:
             current = current.parent
-            if not current.parent:
+            if not current.parent or isinstance(current.parent, RootSnailFish):
                 return None
         current = current.parent.right
         while not isinstance(current, ValueSnailfish):
@@ -94,6 +102,18 @@ class ValueSnailfish(Snailfish):
 
     def explode(self, _=0) -> bool:
         return False
+
+    def split(self) -> bool:
+        if self.number < 10:
+            return False
+        half, remainder = divmod(self.number, 2)
+        replacement = PairSnailfish(ValueSnailfish(
+            half), ValueSnailfish(half + remainder))
+        self.parent.replace(self, replacement)
+        return True
+
+    def replace(self, child: Snailfish, replacement: Snailfish) -> None:
+        raise ValueError("Cannot replace child of value.")
 
 
 class PairSnailfish(Snailfish):
@@ -119,8 +139,36 @@ class PairSnailfish(Snailfish):
         first_right = self.first_right()
         if first_right:
             first_right.number += self.right.number
-        if self.parent.left == self:
-            self.parent.left = ValueSnailfish(0)
-        else:
-            self.parent.right = ValueSnailfish(0)
+        self.parent.replace(self, ValueSnailfish(0))
         return True
+
+    def split(self):
+        return self.left.split() or self.right.split()
+
+    def replace(self, child: Snailfish, replacement: Snailfish) -> None:
+        if child == self.left:
+            self.left = replacement
+        else:
+            self.right = replacement
+
+
+class RootSnailFish(Snailfish):
+    def __init__(self, child: Snailfish) -> None:
+        super().__init__()
+        self.child = child
+        child._parent = self
+
+    def __repr__(self) -> str:
+        return repr(self.child)
+
+    def magnitude(self) -> int:
+        return self.child.magnitude()
+
+    def explode(self, depth=0) -> bool:
+        return self.child.explode()
+
+    def split(self) -> bool:
+        return self.child.split()
+
+    def replace(self, child: Snailfish, replacement: Snailfish) -> None:
+        self.child = replacement
