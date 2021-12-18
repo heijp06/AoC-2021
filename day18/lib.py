@@ -1,4 +1,5 @@
 from functools import reduce
+from itertools import product
 from snailfish import Snailfish, parse
 
 
@@ -8,7 +9,10 @@ def part1(rows: list[str]) -> int:
 
 
 def part2(rows: list[str]) -> int:
-    pass
+    return max(
+        (parse(a) + parse(b)).magnitude()
+        for a, b in product(rows, repeat=2)
+    )
 
 
 def sum_list(rows: list[str]) -> Snailfish:
