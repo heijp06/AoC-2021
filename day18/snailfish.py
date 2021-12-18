@@ -161,6 +161,13 @@ class RootSnailFish(Snailfish):
 
     def __repr__(self) -> str:
         return repr(self.child)
+    
+    def __add__(self, other: RootSnailFish) -> RootSnailFish:
+        left = self.child
+        right = other.child
+        result = RootSnailFish(PairSnailfish(left, right))
+        result.reduce()
+        return result
 
     def magnitude(self) -> int:
         return self.child.magnitude()
