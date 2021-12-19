@@ -45,6 +45,7 @@ class Scanner:
     def __init__(self, name: str, beacons: list[tuple[int, int, int]]):
         self.name = name
         self.beacons = beacons
+        self.position = (0, 0, 0)
     
     def __repr__(self) -> str:
         return self.name
@@ -74,6 +75,7 @@ class Scanner:
                     b in reference_positions for b in beacons)
                 if count >= COMMON_BEACONS:
                     self.beacons = beacons
+                    self.position = tuple(delta)
                     return True
         return False
 
