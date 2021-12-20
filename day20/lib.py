@@ -1,4 +1,12 @@
 def part1(data: list[str]) -> int:
+    return go(data, 2)
+
+
+def part2(data: list[str]) -> int:
+    return go(data, 50)
+
+
+def go(data: list[str], steps: int) -> int:
     key = data[0]
     inverting = False
     if key[0] == '#':
@@ -6,9 +14,8 @@ def part1(data: list[str]) -> int:
             raise NotImplementedError()
         inverting = True
     grid = get_grid(data[2:])
-    # dump(grid)
     active_region = set()
-    for step in range(2):
+    for step in range(steps):
         new_grid = set()
         old_active_region = active_region
         active_region = get_active_region(get_active_region(grid))
@@ -18,24 +25,7 @@ def part1(data: list[str]) -> int:
             if key[index] == '#':
                 new_grid.add((x, y))
         grid = new_grid
-        # dump(grid)
     return len(grid)
-
-
-def part2(data: list[str]) -> int:
-    pass
-
-
-def dump(grid: set[tuple[int, int]]) -> None:
-    min_x = min(x for x, _ in grid)
-    min_y = min(y for _, y in grid)
-    max_x = max(x for x, _ in grid)
-    max_y = max(y for _, y in grid)
-    for y in range(min_y, max_y + 1):
-        for x in range(min_x, max_x + 1):
-            print('#' if (x, y) in grid else '.', end='')
-        print()
-    print()
 
 
 def get_grid(rows: list[str]) -> set[tuple[int, int]]:
