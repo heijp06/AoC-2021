@@ -1,5 +1,6 @@
 import pyperclip
 from lib import part1, part2
+from datetime import datetime
 
 
 def read_rows(**kwargs):
@@ -14,6 +15,9 @@ def clip(x):
 
 
 rows = tuple(read_rows())
+
+t0 = datetime.now()
+
 x = part1(rows)
 print(f"Part 1: {x}")
 clip(x)
@@ -21,3 +25,7 @@ clip(x)
 x = part2(rows)
 print(f"Part 2: {x}")
 clip(x)
+
+t1 = datetime.now()
+
+print(t1 - t0)
