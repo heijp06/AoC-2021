@@ -11,11 +11,11 @@ def parse(rows: list[str]) -> Burrow:
         if rows[row][column] in "ABCD"
     ]
 
-    return Burrow(amphipods, 0)
+    return Burrow(amphipods, 0, len(rows))
 
 
 class Burrow:
-    def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int = 5) -> None:
+    def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int) -> None:
         self.amphipods = tuple(sorted(amphipods))
         self.cost = cost
         self.height = height

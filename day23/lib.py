@@ -1,7 +1,19 @@
 from burrow import parse
 
 
-def part1(rows: list[str]) -> int:
+def part1(rows: tuple[str]) -> int:
+    return go(rows)
+
+
+def part2(rows: tuple[str]) -> int:
+    new_rows = list(rows[:3]) + [
+        "  #D#C#B#A#",
+        "  #D#B#A#C#",
+    ] + list(rows[3:])
+    return go(new_rows)
+
+
+def go(rows: list[str]) -> int:
     burrows = {parse(rows)}
     min_cost = None
     while burrows:
@@ -16,7 +28,3 @@ def part1(rows: list[str]) -> int:
                         new_burrows.add(new_burrow)
         burrows = new_burrows
     return min_cost
-
-
-def part2(rows: list[str]) -> int:
-    pass

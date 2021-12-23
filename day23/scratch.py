@@ -1,5 +1,5 @@
 from burrow import Burrow, parse
-from lib import part1
+from lib import part1, part2
 
 
 def dump(burrow: Burrow) -> None:
@@ -19,7 +19,7 @@ data = [
     "  #########",
 ]
 
-print(part1(data))
+print(part2(data))
 
 grid = [
     "#############",

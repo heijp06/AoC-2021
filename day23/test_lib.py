@@ -50,7 +50,7 @@ def test_parse():
             ((3, 9), "A"),
         ]
     ]
-    expected = Burrow(amphipods, 0)
+    expected = Burrow(amphipods, 0, len(data))
     actual = parse(data)
 
     assert actual == expected

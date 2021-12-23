@@ -85,7 +85,7 @@ class Amphipod:
         others = [
             amphipod for amphipod in burrow.amphipods if amphipod != self
         ]
-        return b.Burrow(others + [new_amphipod], new_cost)
+        return b.Burrow(others + [new_amphipod], new_cost, burrow.height)
 
     def get_route(self, destination: tuple[int, int]) -> list[tuple[int, int]]:
         row_start, column_start = self.position
