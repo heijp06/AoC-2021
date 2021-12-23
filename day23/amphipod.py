@@ -82,7 +82,7 @@ class Amphipod:
         up = [(row, column_start) for row in range(row_start - 1, 0, -1)]
         sideways = [(1, column) for column in range(
             column_start + step, column_end + step, step)]
-        down = [(row, column_end) for row in range(1, row_end + 1)]
+        down = [(row, column_end) for row in range(2, row_end + 1)]
 
         return up + sideways + down
 

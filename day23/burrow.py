@@ -4,18 +4,24 @@ import amphipod as a
 
 
 def parse(rows: list[str]) -> Burrow:
+    # amphipods = [
+    #     a.Amphipod((row, column), rows[row][column])
+    #     for row, column in [
+    #         (2, 3),
+    #         (3, 3),
+    #         (2, 5),
+    #         (3, 5),
+    #         (2, 7),
+    #         (3, 7),
+    #         (2, 9),
+    #         (3, 9),
+    #     ]
+    # ]
     amphipods = [
         a.Amphipod((row, column), rows[row][column])
-        for row, column in [
-            (2, 3),
-            (3, 3),
-            (2, 5),
-            (3, 5),
-            (2, 7),
-            (3, 7),
-            (2, 9),
-            (3, 9),
-        ]
+        for row in range(len(rows))
+        for column in range(len(rows[row]))
+        if rows[row][column] in "ABCD"
     ]
 
     return Burrow(amphipods, 0)
