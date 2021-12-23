@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Collection
+from functools import total_ordering
 
 import burrow as b
 
@@ -8,6 +8,7 @@ def get_step(start: int, end: int) -> int:
     return 1 if start < end else -1
 
 
+@total_ordering
 class Amphipod:
     kinds = {
         "A": (3, 1),
@@ -29,6 +30,11 @@ class Amphipod:
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Amphipod) and self.__key() == other.__key()
+    
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, Amphipod):
+            return NotImplemented
+        return self.__key() < other.__key()
 
     def __repr__(self) -> str:
         return repr(self.__key())

@@ -4,19 +4,6 @@ import amphipod as a
 
 
 def parse(rows: list[str]) -> Burrow:
-    # amphipods = [
-    #     a.Amphipod((row, column), rows[row][column])
-    #     for row, column in [
-    #         (2, 3),
-    #         (3, 3),
-    #         (2, 5),
-    #         (3, 5),
-    #         (2, 7),
-    #         (3, 7),
-    #         (2, 9),
-    #         (3, 9),
-    #     ]
-    # ]
     amphipods = [
         a.Amphipod((row, column), rows[row][column])
         for row in range(len(rows))
@@ -29,7 +16,7 @@ def parse(rows: list[str]) -> Burrow:
 
 class Burrow:
     def __init__(self, amphipods: list[a.Amphipod], cost: int) -> None:
-        self.amphipods = tuple(amphipods)
+        self.amphipods = tuple(sorted(amphipods))
         self.cost = cost
 
     def __key(self) -> tuple[tuple[a.Amphipod], int]:

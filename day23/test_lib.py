@@ -30,7 +30,7 @@ cost_8 = [
 
 @pytest.mark.parametrize(["grid", "expected"], [
     (cost_8, 8),
-    # (data, 12521)
+    (data, 12521)
 ])
 def test_part1(grid, expected):
     assert part1(grid) == expected
