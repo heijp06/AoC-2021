@@ -15,9 +15,10 @@ def parse(rows: list[str]) -> Burrow:
 
 
 class Burrow:
-    def __init__(self, amphipods: list[a.Amphipod], cost: int) -> None:
+    def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int = 5) -> None:
         self.amphipods = tuple(sorted(amphipods))
         self.cost = cost
+        self.height = height
 
     def __key(self) -> tuple[tuple[a.Amphipod], int]:
         return self.amphipods, self.cost

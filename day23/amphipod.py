@@ -30,7 +30,7 @@ class Amphipod:
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Amphipod) and self.__key() == other.__key()
-    
+
     def __lt__(self, other: object) -> bool:
         if not isinstance(other, Amphipod):
             return NotImplemented
@@ -40,12 +40,16 @@ class Amphipod:
         return repr(self.__key())
 
     def final(self, burrow: b.Burrow) -> bool:
-        if self.position == (3, self.destination):
+        row = burrow.height - 2
+        if self.position == (row, self.destination):
             return True
-        if self.position != (2, self.destination):
-            return False
-        amphipod = burrow[3, self.destination]
-        return amphipod and amphipod.kind == self.kind
+        while row > 2:
+            amphipod = burrow[row, self.destination]
+            if not amphipod or amphipod.kind != self.kind:
+                return False
+            row -= 1
+            if self.position == (row, self.destination):
+                return True
 
     def move(self, burrow: b.Burrow) -> list[b.Burrow]:
         if self.final(burrow) or self.position[0] == 1:
@@ -60,13 +64,16 @@ class Amphipod:
     def move_home(self, burrow: b.Burrow) -> b.Burrow | None:
         if self.final(burrow):
             return None
-        home = (3, self.destination)
-        other = burrow[home]
-        if other:
+        row = burrow.height - 2
+        home = (row, self.destination)
+        while row > 2:
+            other = burrow[home]
+            if not other:
+                break
             if other.kind != self.kind:
                 return None
-            else:
-                home = (2, self.destination)
+            row -= 1
+            home = (row, self.destination)
         route_home = self.get_route(home)
         if not self.can_reach(burrow, route_home):
             return None
