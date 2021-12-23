@@ -1,4 +1,5 @@
-from burrow import parse
+from amphipod import Amphipod
+from burrow import Burrow, parse
 
 
 def part1(rows: tuple[str]) -> int:
@@ -17,6 +18,7 @@ def go(rows: list[str]) -> int:
     burrows = {parse(rows)}
     min_cost = None
     while burrows:
+        dump(list(burrows)[0])
         print(len(burrows), min_cost)
         new_burrows = set()
         for burrow in burrows:
@@ -28,3 +30,27 @@ def go(rows: list[str]) -> int:
                         new_burrows.add(new_burrow)
         burrows = new_burrows
     return min_cost
+
+
+def dump(burrow: Burrow) -> None:
+    for row in range(burrow.height):
+        for column in range(13 if row < 3 else 11):
+            amphipod = burrow[row, column]
+            if amphipod:
+                print(amphipod.kind, end='')
+                continue
+            if (
+                row == 0 or
+                column in (0, 12) and row == 1 or
+                column in (0, 1, 2, 4, 6, 8, 10, 11, 12) and row == 2 or
+                column in (2, 4, 6, 8, 10) and 2 < row < burrow.height - 1 or
+                column in (2, 3, 4, 5, 6, 7, 8, 9,
+                           10) and row == burrow.height - 1
+            ):
+                print('#', end='')
+                continue
+            if row > 2 and (column < 2 or column > 10):
+                print(' ', end='')
+                continue
+            print('.', end='')
+        print()
