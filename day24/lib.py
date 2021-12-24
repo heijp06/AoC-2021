@@ -1,8 +1,8 @@
-from alu import ALU
+from simple_alu import SimpleAlu
 
 
 def part1(rows):
-    alu = ALU(list(rows))
+    alu = SimpleAlu(list(rows))
     number = int("9" * 14)
     while not valid(alu, number):
         if number % 1000 == 999:
@@ -17,7 +17,7 @@ def part2(rows):
     pass
 
 
-def valid(alu: ALU, number: int) -> bool:
+def valid(alu: SimpleAlu, number: int) -> bool:
     digits = [int(digit) for digit in str(number)]
     alu.run(digits)
     return alu.get("z") == 0

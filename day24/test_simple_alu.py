@@ -1,12 +1,12 @@
 import pytest
-from alu import ALU
+from simple_alu import SimpleAlu
 from lib import part1, part2
 from itertools import product
 
 
 @pytest.mark.parametrize(["register"], "wxyz")
 def test_input(register):
-    alu = ALU([f"inp {register}"])
+    alu = SimpleAlu([f"inp {register}"])
     alu.run([42])
 
     assert alu.get(register) == 42
@@ -15,7 +15,7 @@ def test_input(register):
 
 @pytest.mark.parametrize(["register1", "register2"], product("wxyz", repeat=2))
 def test_add(register1, register2):
-    alu = ALU([
+    alu = SimpleAlu([
         f"inp {register1}",
         f"inp {register2}",
         f"add {register1} {register2}"
@@ -29,7 +29,7 @@ def test_add(register1, register2):
 
 @pytest.mark.parametrize(["register1", "register2"], product("wxyz", repeat=2))
 def test_mul(register1, register2):
-    alu = ALU([
+    alu = SimpleAlu([
         f"inp {register1}",
         f"inp {register2}",
         f"mul {register1} {register2}"
@@ -43,7 +43,7 @@ def test_mul(register1, register2):
 
 @pytest.mark.parametrize(["register1", "register2"], product("wxyz", repeat=2))
 def test_div(register1, register2):
-    alu = ALU([
+    alu = SimpleAlu([
         f"inp {register1}",
         f"inp {register2}",
         f"div {register1} {register2}"
@@ -57,7 +57,7 @@ def test_div(register1, register2):
 
 @pytest.mark.parametrize(["register1", "register2"], product("wxyz", repeat=2))
 def test_mod(register1, register2):
-    alu = ALU([
+    alu = SimpleAlu([
         f"inp {register1}",
         f"inp {register2}",
         f"mod {register1} {register2}"
@@ -71,7 +71,7 @@ def test_mod(register1, register2):
 
 @pytest.mark.parametrize(["register1", "register2"], product("wxyz", repeat=2))
 def test_eql(register1, register2):
-    alu = ALU([
+    alu = SimpleAlu([
         f"inp {register1}",
         f"inp {register2}",
         f"eql {register1} {register2}"
@@ -83,7 +83,7 @@ def test_eql(register1, register2):
     assert_others_zero(register1, register2)
 
 
-def assert_others_zero(alu: ALU, *registers: str) -> None:
+def assert_others_zero(alu: SimpleAlu, *registers: str) -> None:
     for register in registers:
         if register not in registers:
             assert register == 0
