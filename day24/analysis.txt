@@ -1,0 +1,37 @@
+inp w
+mul x 0
+add x z
+mod x 26
+div z <A>
+add x <B>
+eql x w
+eql x 0
+mul y 0
+add y 25
+mul y x
+add y 1
+mul z y
+mul y 0
+add y w
+add y <C>
+mul y x
+add z y
+
+<A> = [1, 1, 1, 26, 1, 1, 1, 26, 1, 26, 26, 26, 26, 26]
+<B> = [10, 12, 15, -9, 15, 10, 14, -5, 14, -7, -12, -10, -1, -11]
+<C> = [15, 8, 2, 6, 13, 4, 1, 9, 5, 13, 9, 6, 2, 2]
+
+f(a, b, c)
+{
+    x = (z % 26 + b != w)
+    z /= a
+    y = 25
+
+}
+
+y = 0
+if (z % 26 + b != w)
+{
+    y = 25
+}
+

@@ -27,7 +27,8 @@ class Alu:
                 else:
                     argument = self.register(arguments[0])
                 register.binary_operation(instruction, argument)
-            # print(self)
+            print(self)
+            input()
 
     def register(self, name: str) -> Register:
         return getattr(self, name)
