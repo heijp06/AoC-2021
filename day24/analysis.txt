@@ -2,8 +2,8 @@ inp w
 mul x 0
 add x z
 mod x 26
-div z <A>
-add x <B>
+div z <a>
+add x <b>
 eql x w
 eql x 0
 mul y 0
@@ -13,25 +13,38 @@ add y 1
 mul z y
 mul y 0
 add y w
-add y <C>
+add y <c>
 mul y x
 add z y
 
-<A> = [1, 1, 1, 26, 1, 1, 1, 26, 1, 26, 26, 26, 26, 26]
-<B> = [10, 12, 15, -9, 15, 10, 14, -5, 14, -7, -12, -10, -1, -11]
-<C> = [15, 8, 2, 6, 13, 4, 1, 9, 5, 13, 9, 6, 2, 2]
+<a> = [1, 1, 1, 26, 1, 1, 1, 26, 1, 26, 26, 26, 26, 26]
+<b> = [10, 12, 15, -9, 15, 10, 14, -5, 14, -7, -12, -10, -1, -11]
+<c> = [15, 8, 2, 6, 13, 4, 1, 9, 5, 13, 9, 6, 2, 2]
 
-f(a, b, c)
-{
-    x = (z % 26 + b != w)
-    z /= a
-    y = 25
+The code in the input is the 18 lines above with different values for a, b and c. The values of a, b and c are as given
+in the lists above.
+The following can now be deduced.
+- a only has values 1 or 26. 7 times 1 and 7 times 26.
+- If a == 1, b > 9. If a == 26, -26 < b < 0.
+- 0 < c < 26.
 
-}
+With a, b and c as above, z as the value of register z and i[n] as the value of the nth input. The code above can be
+written as:
 
-y = 0
-if (z % 26 + b != w)
-{
-    y = 25
-}
+    if z % 26 != i[n] - b:
+        z /= a    # For reasons given below a is always 1 here, this is a noop.
+        z = 26 * z + i[n] + C
+    else:
+        z /= a
 
+Now:
+- Since b > 9 if a == 1, it follows that the expression in the if is always True if a == 1.
+- Since 0 < c < 26, it follows that the 7 values of a == 1 will lead to a value of z that is at least 26^6*m + n. Where
+  0 < m < 26 and 0 < n < 26^5.
+- It follows that to get at zero, the code in the else branch should run whenever a == 26. This means i[n] should be
+  chosen such that z % 26 == i[n] - b whenever a == 26. Furthermore z % 26 == i[n] + c[m] with m < n if a == 26, i.e.:
+  i[n] = i[m] + c[m] + b[n] for some value of m < n.
+- To find the largest model number, i[m] should be as high as possible, but both i[m] and i[n] should be positive
+  numbers smaller than 10. From which it follows that i[m] = min(9, 9 - c[m] - b[n]) (b[n] is negative).
+- To find the smallest model number, i[m] = max(1, 1 - c[m] - b[n]).
+- Values of c[m] can be found by putting them on the stack if a == 1 and popping them when a == 26.
