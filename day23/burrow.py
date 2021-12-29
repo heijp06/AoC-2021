@@ -19,6 +19,9 @@ class Burrow:
         self.amphipods = tuple(sorted(amphipods))
         self.cost = cost
         self.height = height
+        self._amphipods_by_position = {
+            amphipod.position: amphipod for amphipod in self.amphipods
+        }
 
     def __key(self) -> tuple[tuple[a.Amphipod], int]:
         return self.amphipods, self.cost
@@ -33,11 +36,7 @@ class Burrow:
         return repr(self.__key())
 
     def __getitem__(self, position: tuple[int, int]) -> a.Amphipod | None:
-        amphipods = [
-            amphipod for amphipod in self.amphipods
-            if amphipod.position == position
-        ]
-        return amphipods and amphipods[0]
+        return self._amphipods_by_position.get(position)
 
     def move(self) -> list[Burrow]:
         for amphipod in self.amphipods:
