@@ -54,7 +54,7 @@ class Amphipod:
         burrows = []
         for column in [1, 2, 4, 6, 8, 10, 11]:
             route = burrow.get_route(self.position, (1, column))
-            if self.can_reach(burrow, route):
+            if burrow.can_travel(route):
                 burrows.append(self.create_burrow(burrow, route))
         return burrows
 
@@ -72,7 +72,7 @@ class Amphipod:
             row -= 1
             home = (row, self.destination)
         route_home = burrow.get_route(self.position, home)
-        if not self.can_reach(burrow, route_home):
+        if not burrow.can_travel(route_home):
             return None
         return self.create_burrow(burrow, route_home)
 
@@ -83,6 +83,3 @@ class Amphipod:
             amphipod for amphipod in burrow.amphipods if amphipod != self
         ]
         return b.Burrow(others + [new_amphipod], new_cost, burrow.height, burrow.routes)
-
-    def can_reach(self, burrow: b.Burrow, route: list[tuple[int, int]]) -> bool:
-        return not any(burrow[position] for position in route)

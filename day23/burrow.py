@@ -57,3 +57,6 @@ class Burrow:
 
     def final(self) -> bool:
         return all(amphipod.final(self) for amphipod in self.amphipods)
+    
+    def can_travel(self, route: list[Position]) -> bool:
+        return all(position not in self._amphipods_by_position for position in route)
