@@ -4,10 +4,6 @@ from functools import total_ordering
 import burrow as b
 
 
-def get_step(start: int, end: int) -> int:
-    return 1 if start < end else -1
-
-
 @total_ordering
 class Amphipod:
     kinds = {
@@ -56,7 +52,7 @@ class Amphipod:
             return []
         burrows = []
         for column in [1, 2, 4, 6, 8, 10, 11]:
-            route = self.get_route((1, column))
+            route = burrow.get_route(self.position, (1, column))
             if self.can_reach(burrow, route):
                 burrows.append(self.create_burrow(burrow, route))
         return burrows
@@ -74,7 +70,7 @@ class Amphipod:
                 return None
             row -= 1
             home = (row, self.destination)
-        route_home = self.get_route(home)
+        route_home = burrow.get_route(self.position, home)
         if not self.can_reach(burrow, route_home):
             return None
         return self.create_burrow(burrow, route_home)
@@ -85,19 +81,7 @@ class Amphipod:
         others = [
             amphipod for amphipod in burrow.amphipods if amphipod != self
         ]
-        return b.Burrow(others + [new_amphipod], new_cost, burrow.height)
-
-    def get_route(self, destination: tuple[int, int]) -> list[tuple[int, int]]:
-        row_start, column_start = self.position
-        row_end, column_end = destination
-        step = get_step(column_start, column_end)
-
-        up = [(row, column_start) for row in range(row_start - 1, 0, -1)]
-        sideways = [(1, column) for column in range(
-            column_start + step, column_end + step, step)]
-        down = [(row, column_end) for row in range(2, row_end + 1)]
-
-        return up + sideways + down
+        return b.Burrow(others + [new_amphipod], new_cost, burrow.height, burrow.routes)
 
     def can_reach(self, burrow: b.Burrow, route: list[tuple[int, int]]) -> bool:
         return not any(burrow[position] for position in route)

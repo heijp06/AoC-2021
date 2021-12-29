@@ -2,6 +2,7 @@ import pytest
 from lib import part1, part2
 from amphipod import Amphipod
 from burrow import Burrow, parse
+from routes import Routes
 
 data = [
     "#############",
@@ -50,7 +51,7 @@ def test_parse():
             ((3, 9), "A"),
         ]
     ]
-    expected = Burrow(amphipods, 0, len(data))
+    expected = Burrow(amphipods, 0, len(data), Routes())
     actual = parse(data)
 
     assert actual == expected

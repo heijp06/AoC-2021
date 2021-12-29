@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import amphipod as a
+from routes import Position, Routes
+
+Position = tuple[int, int]
 
 
 def parse(rows: list[str]) -> Burrow:
@@ -11,17 +14,18 @@ def parse(rows: list[str]) -> Burrow:
         if rows[row][column] in "ABCD"
     ]
 
-    return Burrow(amphipods, 0, len(rows))
+    return Burrow(amphipods, 0, len(rows), Routes())
 
 
 class Burrow:
-    def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int) -> None:
+    def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int, routes: Routes) -> None:
         self.amphipods = tuple(sorted(amphipods))
         self.cost = cost
         self.height = height
         self._amphipods_by_position = {
             amphipod.position: amphipod for amphipod in self.amphipods
         }
+        self.routes = routes
 
     def __key(self) -> tuple[tuple[a.Amphipod], int]:
         return self.amphipods, self.cost
@@ -49,6 +53,9 @@ class Burrow:
             for amphipod in self.amphipods
             for burrow in amphipod.move(self)
         ]
+
+    def get_route(self, start_point: Position, end_point: Position) -> list[Position]:
+        return self.routes.get_route(start_point, end_point)
 
     def final(self) -> bool:
         return all(amphipod.final(self) for amphipod in self.amphipods)
