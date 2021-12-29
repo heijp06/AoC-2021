@@ -7,7 +7,7 @@ def get_step(start: int, end: int) -> int:
 
 class Routes:
     def __init__(self) -> None:
-        self._routes = {}
+        self._routes: dict[tuple[Position, Position], list[Position]] = {}
 
     def get_route(self, start_point: Position, end_point: Position) -> list[Position]:
         if not (route := self._routes.get((start_point, end_point))):

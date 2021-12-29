@@ -3,8 +3,6 @@ from __future__ import annotations
 import amphipod as a
 from routes import Position, Routes
 
-Position = tuple[int, int]
-
 
 def parse(rows: list[str]) -> Burrow:
     amphipods = [
@@ -27,7 +25,7 @@ class Burrow:
         }
         self.routes = routes
 
-    def __key(self) -> tuple[tuple[a.Amphipod], int]:
+    def __key(self) -> tuple[tuple[a.Amphipod, ...], int]:
         return self.amphipods, self.cost
 
     def __hash__(self) -> int:

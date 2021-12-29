@@ -46,6 +46,7 @@ class Amphipod:
             row -= 1
             if self.position == (row, self.destination):
                 return True
+        return False
 
     def move_hallway(self, burrow: b.Burrow) -> list[b.Burrow]:
         if self.final(burrow) or self.position[0] == 1:
