@@ -18,7 +18,7 @@ def go(rows: list[str]) -> int:
     burrows = {parse(rows)}
     min_cost = None
     while burrows:
-        dump(list(burrows)[0])
+        # dump(list(burrows)[0])
         print(len(burrows), min_cost)
         new_burrows = set()
         for burrow in burrows:
