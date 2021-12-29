@@ -1,5 +1,4 @@
 from typing import Any
-from simple_alu import SimpleAlu
 
 REPEATED_CODE_LENGTH = 18
 
@@ -22,14 +21,14 @@ def go(rows: list[str], func: Any) -> str:  # sourcery skip: move-assign
         c = get_value(rows[index + 15])
         if a == 1:
             cs.append((index // REPEATED_CODE_LENGTH, c))
-            digits.append('*')
+            digits.append('?')
         else:
             old_index, old_c = cs.pop()
-            # old_digit = min(9, 9 - old_c - b)
             old_digit = func(b, old_c)
             digits[old_index] = old_digit
             digit = old_digit + old_c + b
             digits.append(digit)
+        print(*digits, sep="")
     return "".join(str(digit) for digit in digits)
 
 
