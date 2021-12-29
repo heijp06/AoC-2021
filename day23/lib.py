@@ -1,4 +1,3 @@
-from amphipod import Amphipod
 from burrow import Burrow, parse
 
 
