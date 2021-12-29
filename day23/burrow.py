@@ -51,7 +51,7 @@ class Burrow:
         return [
             burrow
             for amphipod in self.amphipods
-            for burrow in amphipod.move(self)
+            for burrow in amphipod.move_hallway(self)
         ]
 
     def get_route(self, start_point: Position, end_point: Position) -> list[Position]:
