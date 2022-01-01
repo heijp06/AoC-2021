@@ -84,3 +84,10 @@ class Amphipod:
             amphipod for amphipod in burrow.amphipods if amphipod != self
         ]
         return extra_cost, b.Burrow(others + [new_amphipod], burrow.height, burrow.routes)
+
+    def min_cost_to_column(self, burrow: b.Burrow) -> None:
+        if self.final(burrow):
+            return 0
+        row, column = self.position
+        distance = row + 1 if column == self.destination else row - 1 + abs(column - self.destination)
+        return distance * self.energy

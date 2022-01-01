@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import FrozenSet
 from functools import total_ordering
+from collections import defaultdict
 
 import amphipod as a
 from routes import Position, Route, Routes
@@ -56,3 +57,15 @@ class Burrow:
 
     def can_travel(self, route: list[Position]) -> bool:
         return all(position not in self._amphipods_by_position for position in route)
+
+    def min_cost_to_solution(self) -> int:
+        seen = defaultdict(int)
+        result = 0
+        for amphipod in self.amphipods:
+            cost = amphipod.min_cost_to_column(self)
+            if not cost:
+                continue
+            result += cost
+            seen[amphipod.kind] += 1
+            result += seen[amphipod.kind] * amphipod.energy
+        return result

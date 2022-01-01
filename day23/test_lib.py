@@ -30,11 +30,22 @@ cost_8 = [
 
 
 @pytest.mark.parametrize(["grid", "expected"], [
+    (final, 0),
     (cost_8, 8),
     (data, 12521)
 ])
 def test_part1(grid, expected):
     assert part1(grid) == expected
+
+
+@pytest.mark.parametrize(["grid", "expected"], [
+    (final, 0),
+    (cost_8, 8),
+    (data, 12499)
+])
+def test_min_cost_to_end(grid, expected):
+    burrow = parse(grid)
+    assert burrow.min_cost_to_solution() == expected
 
 
 def test_parse():

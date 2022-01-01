@@ -19,7 +19,7 @@ def go(rows: list[str]) -> int | None:
     burrows = PriorityQueue()
     burrows.put((0, burrow))
     seen = {burrow: 0}
-    min_cost = None
+    min_cost = 0 if burrow.final() else None
     while burrows.qsize():
         _, burrow = burrows.get()
         old_cost = seen[burrow]
