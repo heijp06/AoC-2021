@@ -1,5 +1,5 @@
 import pytest
-from lib import part1, part2
+from lib import move, part1, part2
 from amphipod import Amphipod
 from burrow import Burrow, parse
 from routes import Routes
@@ -52,7 +52,7 @@ def test_parse():
         ]
     ]
     height = len(data)
-    expected = Burrow(amphipods, 0, height, Routes(height))
+    expected = Burrow(amphipods, height, Routes(height))
     actual = parse(data)
 
     assert actual == expected
@@ -64,7 +64,7 @@ def test_parse():
 ])
 def test_move(grid, number):
     burrow = parse(grid)
-    burrows = burrow.move()
+    burrows = move(burrow)
 
     assert len(burrows) == number
 

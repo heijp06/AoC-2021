@@ -49,7 +49,7 @@ class Amphipod:
                 return True
         return False
 
-    def move_hallway(self, burrow: b.Burrow) -> list[b.Burrow]:
+    def move_hallway(self, burrow: b.Burrow) -> list[tuple[int, b.Burrow]]:
         if self.final(burrow) or self.position[0] == 1:
             return []
         burrows = []
@@ -59,7 +59,7 @@ class Amphipod:
                 burrows.append(self.create_burrow(burrow, route))
         return burrows
 
-    def move_home(self, burrow: b.Burrow) -> b.Burrow | None:
+    def move_home(self, burrow: b.Burrow) -> tuple[int, b.Burrow] | None:
         if self.final(burrow):
             return None
         row = burrow.height - 2
@@ -77,10 +77,10 @@ class Amphipod:
             return None
         return self.create_burrow(burrow, route_home)
 
-    def create_burrow(self, burrow: b.Burrow, route: Route) -> b.Burrow:
-        new_cost = burrow.cost + route.length * self.energy
+    def create_burrow(self, burrow: b.Burrow, route: Route) -> tuple[int, b.Burrow]:
+        extra_cost = route.length * self.energy
         new_amphipod = Amphipod(route.positions[-1], self.kind)
         others = [
             amphipod for amphipod in burrow.amphipods if amphipod != self
         ]
-        return b.Burrow(others + [new_amphipod], new_cost, burrow.height, burrow.routes)
+        return extra_cost, b.Burrow(others + [new_amphipod], burrow.height, burrow.routes)

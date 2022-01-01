@@ -1,4 +1,4 @@
-import pyperclip
+import pyperclip    # type: ignore
 from lib import part1, part2
 from datetime import datetime
 
@@ -15,7 +15,7 @@ def clip(x):
 
 t0 = datetime.now()
 
-rows = tuple(read_rows())
+rows = read_rows()
 x = part1(rows)
 print(f"Part 1: {x}")
 clip(x)

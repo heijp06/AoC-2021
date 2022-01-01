@@ -1,12 +1,11 @@
 from burrow import Burrow, parse
-from sortedcontainers import SortedDict
 
 
-def part1(rows: tuple[str]) -> int:
+def part1(rows: list[str]) -> int | None:
     return go(rows)
 
 
-def part2(rows: tuple[str]) -> int:
+def part2(rows: list[str]) -> int | None:
     new_rows = list(rows[:3]) + [
         "  #D#C#B#A#",
         "  #D#B#A#C#",
@@ -14,25 +13,41 @@ def part2(rows: tuple[str]) -> int:
     return go(new_rows)
 
 
-def go(rows: list[str]) -> int:
-    groups = SortedDict()
-    burrows = {parse(rows)}
+def go(rows: list[str]) -> int | None:
+    burrow = parse(rows)
+    burrows = {burrow}
+    seen = {burrow: 0}
     min_cost = None
-    cost = 0
-    while not min_cost or cost < min_cost:
+    while burrows:
+        new_burrows = set()
         for burrow in burrows:
-            for new_burrow in burrow.move():
-                if not min_cost or new_burrow.cost < min_cost:
+            old_cost = seen[burrow]
+            for extra_cost, new_burrow in move(burrow):
+                new_cost = old_cost + extra_cost
+                if (
+                    (not min_cost or new_cost < min_cost)
+                    and (new_burrow not in seen or new_cost < seen[new_burrow])
+                ):
+                    seen[new_burrow] = new_cost
                     if new_burrow.final():
-                        min_cost = new_burrow.cost
-                    elif new_burrow.cost in groups:
-                        groups[new_burrow.cost].add(new_burrow)
+                        min_cost = new_cost
                     else:
-                        groups[new_burrow.cost] = {new_burrow}
-        if not groups:
-            break
-        cost, burrows = groups.popitem(index=0)
+                        new_burrows.add(new_burrow)
+        burrows = new_burrows
     return min_cost
+
+
+def move(self: Burrow) -> list[tuple[int, Burrow]]:
+    for amphipod in self.amphipods:
+        burrow = amphipod.move_home(self)
+        if burrow:
+            return [burrow]
+
+    return [
+        burrow
+        for amphipod in self.amphipods
+        for burrow in amphipod.move_hallway(self)
+    ]
 
 
 def dump(burrow: Burrow) -> None:

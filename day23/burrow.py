@@ -14,21 +14,20 @@ def parse(rows: list[str]) -> Burrow:
     ]
 
     height = len(rows)
-    return Burrow(amphipods, 0, height, Routes(height))
+    return Burrow(amphipods, height, Routes(height))
 
 
 class Burrow:
-    def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int, routes: Routes) -> None:
+    def __init__(self, amphipods: list[a.Amphipod], height: int, routes: Routes) -> None:
         self.amphipods = frozenset(amphipods)
-        self.cost = cost
         self.height = height
         self._amphipods_by_position = {
             amphipod.position: amphipod for amphipod in self.amphipods
         }
         self.routes = routes
 
-    def __key(self) -> tuple[FrozenSet[a.Amphipod], int]:
-        return self.amphipods, self.cost
+    def __key(self) -> FrozenSet[a.Amphipod]:
+        return self.amphipods
 
     def __hash__(self) -> int:
         return hash(self.__key())
@@ -42,23 +41,11 @@ class Burrow:
     def __getitem__(self, position: tuple[int, int]) -> a.Amphipod | None:
         return self._amphipods_by_position.get(position)
 
-    def move(self) -> list[Burrow]:
-        for amphipod in self.amphipods:
-            burrow = amphipod.move_home(self)
-            if burrow:
-                return [burrow]
-
-        return [
-            burrow
-            for amphipod in self.amphipods
-            for burrow in amphipod.move_hallway(self)
-        ]
-
     def get_route(self, start_point: Position, end_point: Position) -> Route:
         return self.routes[start_point, end_point]
 
     def final(self) -> bool:
         return all(amphipod.final(self) for amphipod in self.amphipods)
-    
+
     def can_travel(self, route: list[Position]) -> bool:
         return all(position not in self._amphipods_by_position for position in route)
