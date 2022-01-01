@@ -17,11 +17,13 @@ def part2(rows: list[str]) -> int | None:
 def go(rows: list[str]) -> int | None:
     burrow = parse(rows)
     burrows = PriorityQueue()
-    burrows.put((0, burrow))
+    burrows.put((burrow.min_cost_to_solution(), burrow))
     seen = {burrow: 0}
     min_cost = 0 if burrow.final() else None
     while burrows.qsize():
-        _, burrow = burrows.get()
+        min_cost_to_solution, burrow = burrows.get()
+        if min_cost and min_cost <= min_cost_to_solution:
+            break
         old_cost = seen[burrow]
         for extra_cost, new_burrow in move(burrow):
             new_cost = old_cost + extra_cost
@@ -33,7 +35,7 @@ def go(rows: list[str]) -> int | None:
                 if new_burrow.final():
                     min_cost = new_cost
                 else:
-                    burrows.put((new_cost, new_burrow))
+                    burrows.put((new_cost + new_burrow.min_cost_to_solution(), new_burrow))
     return min_cost
 
 
