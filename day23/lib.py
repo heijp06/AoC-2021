@@ -1,5 +1,4 @@
 from burrow import Burrow, parse
-from sortedcontainers import SortedDict
 
 
 def part1(rows: tuple[str]) -> int:
@@ -15,24 +14,32 @@ def part2(rows: tuple[str]) -> int:
 
 
 def go(rows: list[str]) -> int:
-    groups = SortedDict()
     burrows = {parse(rows)}
     min_cost = None
-    cost = 0
-    while not min_cost or cost < min_cost:
+    while burrows:
+        new_burrows = set()
         for burrow in burrows:
-            for new_burrow in burrow.move():
+            for new_burrow in move(burrow):
                 if not min_cost or new_burrow.cost < min_cost:
                     if new_burrow.final():
                         min_cost = new_burrow.cost
-                    elif new_burrow.cost in groups:
-                        groups[new_burrow.cost].add(new_burrow)
                     else:
-                        groups[new_burrow.cost] = {new_burrow}
-        if not groups:
-            break
-        cost, burrows = groups.popitem(index=0)
+                        new_burrows.add(new_burrow)
+        burrows = new_burrows
     return min_cost
+
+
+def move(self: Burrow) -> list[Burrow]:
+    for amphipod in self.amphipods:
+        burrow = amphipod.move_home(self)
+        if burrow:
+            return [burrow]
+
+    return [
+        burrow
+        for amphipod in self.amphipods
+        for burrow in amphipod.move_hallway(self)
+    ]
 
 
 def dump(burrow: Burrow) -> None:
