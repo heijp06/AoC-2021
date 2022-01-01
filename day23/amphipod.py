@@ -53,10 +53,19 @@ class Amphipod:
         if self.final(burrow) or self.position[0] == 1:
             return []
         burrows = []
-        for column in [1, 2, 4, 6, 8, 10, 11]:
+        column = self.position[1]
+        left = [c for c in [8, 6, 4, 2, 1] if c < column]
+        right = [c for c in [4, 6, 8, 10, 11] if c > column]
+        for column in left:
             route = burrow.get_route(self.position, (1, column))
-            if burrow.can_travel(route.positions):
-                burrows.append(self.create_burrow(burrow, route))
+            if not burrow.can_travel(route.positions):
+                break
+            burrows.append(self.create_burrow(burrow, route))
+        for column in right:
+            route = burrow.get_route(self.position, (1, column))
+            if not burrow.can_travel(route.positions):
+                break
+            burrows.append(self.create_burrow(burrow, route))
         return burrows
 
     def move_home(self, burrow: b.Burrow) -> tuple[int, b.Burrow] | None:

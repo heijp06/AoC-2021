@@ -69,17 +69,6 @@ def test_parse():
     assert actual == expected
 
 
-@pytest.mark.parametrize(["grid", "number"], [
-    (data, 28),
-    (final, 0)
-])
-def test_move(grid, number):
-    burrow = parse(grid)
-    burrows = move(burrow)
-
-    assert len(burrows) == number
-
-
 @pytest.mark.parametrize(["grid", "is_final"], [
     (data, False),
     (final, True)
