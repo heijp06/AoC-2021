@@ -50,19 +50,26 @@ class Amphipod:
         return False
 
     def move_hallway(self, burrow: b.Burrow) -> list[tuple[int, b.Burrow]]:
-        if self.final(burrow) or self.position[0] == 1:
+        if self.final(burrow):
             return []
+        row, column = self.position
+        if row == 1:
+            return []
+        if row > 2:
+            for amphipod in burrow.amphipods:
+                r, c = amphipod.position
+                if c == column and r < row:
+                    return []
         burrows = []
-        column = self.position[1]
         left = [c for c in [8, 6, 4, 2, 1] if c < column]
         right = [c for c in [4, 6, 8, 10, 11] if c > column]
-        for column in left:
-            route = burrow.get_route(self.position, (1, column))
+        for c in left:
+            route = burrow.get_route(self.position, (1, c))
             if not burrow.can_travel(route.positions):
                 break
             burrows.append(self.create_burrow(burrow, route))
-        for column in right:
-            route = burrow.get_route(self.position, (1, column))
+        for c in right:
+            route = burrow.get_route(self.position, (1, c))
             if not burrow.can_travel(route.positions):
                 break
             burrows.append(self.create_burrow(burrow, route))
