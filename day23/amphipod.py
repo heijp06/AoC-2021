@@ -2,6 +2,7 @@ from __future__ import annotations
 from functools import total_ordering
 
 import burrow as b
+from routes import Route
 
 
 @total_ordering
@@ -54,7 +55,7 @@ class Amphipod:
         burrows = []
         for column in [1, 2, 4, 6, 8, 10, 11]:
             route = burrow.get_route(self.position, (1, column))
-            if burrow.can_travel(route):
+            if burrow.can_travel(route.positions):
                 burrows.append(self.create_burrow(burrow, route))
         return burrows
 
@@ -72,13 +73,13 @@ class Amphipod:
             row -= 1
             home = (row, self.destination)
         route_home = burrow.get_route(self.position, home)
-        if not burrow.can_travel(route_home):
+        if not burrow.can_travel(route_home.positions):
             return None
         return self.create_burrow(burrow, route_home)
 
-    def create_burrow(self, burrow: b.Burrow, route: list[tuple[int, int]]) -> b.Burrow:
-        new_cost = burrow.cost + len(route) * self.energy
-        new_amphipod = Amphipod(route[-1], self.kind)
+    def create_burrow(self, burrow: b.Burrow, route: Route) -> b.Burrow:
+        new_cost = burrow.cost + route.length * self.energy
+        new_amphipod = Amphipod(route.positions[-1], self.kind)
         others = [
             amphipod for amphipod in burrow.amphipods if amphipod != self
         ]

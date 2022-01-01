@@ -51,7 +51,8 @@ def test_parse():
             ((3, 9), "A"),
         ]
     ]
-    expected = Burrow(amphipods, 0, len(data), Routes())
+    height = len(data)
+    expected = Burrow(amphipods, 0, height, Routes(height))
     actual = parse(data)
 
     assert actual == expected

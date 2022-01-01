@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import FrozenSet
 
 import amphipod as a
-from routes import Position, Routes
+from routes import Position, Route, Routes
 
 
 def parse(rows: list[str]) -> Burrow:
@@ -13,7 +13,8 @@ def parse(rows: list[str]) -> Burrow:
         if rows[row][column] in "ABCD"
     ]
 
-    return Burrow(amphipods, 0, len(rows), Routes())
+    height = len(rows)
+    return Burrow(amphipods, 0, height, Routes(height))
 
 
 class Burrow:
@@ -53,8 +54,8 @@ class Burrow:
             for burrow in amphipod.move_hallway(self)
         ]
 
-    def get_route(self, start_point: Position, end_point: Position) -> list[Position]:
-        return self.routes.get_route(start_point, end_point)
+    def get_route(self, start_point: Position, end_point: Position) -> Route:
+        return self.routes[start_point, end_point]
 
     def final(self) -> bool:
         return all(amphipod.final(self) for amphipod in self.amphipods)
