@@ -1,3 +1,4 @@
+from queue import PriorityQueue
 from burrow import Burrow, parse
 
 
@@ -15,26 +16,24 @@ def part2(rows: list[str]) -> int | None:
 
 def go(rows: list[str]) -> int | None:
     burrow = parse(rows)
-    burrows = {burrow}
+    burrows = PriorityQueue()
+    burrows.put((0, burrow))
     seen = {burrow: 0}
     min_cost = None
-    while burrows:
-        print(len(burrows), min_cost)
-        new_burrows = set()
-        for burrow in burrows:
-            old_cost = seen[burrow]
-            for extra_cost, new_burrow in move(burrow):
-                new_cost = old_cost + extra_cost
-                if (
-                    (not min_cost or new_cost < min_cost)
-                    and (new_burrow not in seen or new_cost < seen[new_burrow])
-                ):
-                    seen[new_burrow] = new_cost
-                    if new_burrow.final():
-                        min_cost = new_cost
-                    else:
-                        new_burrows.add(new_burrow)
-        burrows = new_burrows
+    while burrows.qsize():
+        _, burrow = burrows.get()
+        old_cost = seen[burrow]
+        for extra_cost, new_burrow in move(burrow):
+            new_cost = old_cost + extra_cost
+            if (
+                (not min_cost or new_cost < min_cost)
+                and (new_burrow not in seen or new_cost < seen[new_burrow])
+            ):
+                seen[new_burrow] = new_cost
+                if new_burrow.final():
+                    min_cost = new_cost
+                else:
+                    burrows.put((new_cost, new_burrow))
     return min_cost
 
 

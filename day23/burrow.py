@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import FrozenSet
+from functools import total_ordering
 
 import amphipod as a
 from routes import Position, Route, Routes
@@ -17,6 +18,7 @@ def parse(rows: list[str]) -> Burrow:
     return Burrow(amphipods, height, Routes(height))
 
 
+@total_ordering
 class Burrow:
     def __init__(self, amphipods: list[a.Amphipod], height: int, routes: Routes) -> None:
         self.amphipods = frozenset(amphipods)
@@ -34,6 +36,11 @@ class Burrow:
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, Burrow) and self.__key() == other.__key()
+
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, Burrow):
+            return NotImplemented
+        return self.__key() < other.__key()
 
     def __repr__(self) -> str:
         return repr(self.__key())
