@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import FrozenSet
 
 import amphipod as a
 from routes import Position, Routes
@@ -17,7 +18,7 @@ def parse(rows: list[str]) -> Burrow:
 
 class Burrow:
     def __init__(self, amphipods: list[a.Amphipod], cost: int, height: int, routes: Routes) -> None:
-        self.amphipods = tuple(sorted(amphipods))
+        self.amphipods = frozenset(amphipods)
         self.cost = cost
         self.height = height
         self._amphipods_by_position = {
@@ -25,7 +26,7 @@ class Burrow:
         }
         self.routes = routes
 
-    def __key(self) -> tuple[tuple[a.Amphipod, ...], int]:
+    def __key(self) -> tuple[FrozenSet[a.Amphipod], int]:
         return self.amphipods, self.cost
 
     def __hash__(self) -> int:
