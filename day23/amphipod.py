@@ -55,11 +55,9 @@ class Amphipod:
         row, column = self.position
         if row == 1:
             return []
-        if row > 2:
-            for amphipod in burrow.amphipods:
-                r, c = amphipod.position
-                if c == column and r < row:
-                    return []
+        for r in range(2, row):
+            if burrow[2, r]:
+                return []
         burrows = []
         left = [c for c in [8, 6, 4, 2, 1] if c < column]
         right = [c for c in [4, 6, 8, 10, 11] if c > column]
