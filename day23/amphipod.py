@@ -37,17 +37,14 @@ class Amphipod:
         return repr(self.__key())
 
     def final(self, burrow: b.Burrow) -> bool:
-        row = burrow.height - 2
-        if self.position == (row, self.destination):
-            return True
-        while row > 2:
-            amphipod = burrow[row, self.destination]
+        row, column = self.position
+        if column != self.destination:
+            return False
+        for r in range(burrow.height - 2, row, -1):
+            amphipod = burrow[r, column]
             if not amphipod or amphipod.kind != self.kind:
                 return False
-            row -= 1
-            if self.position == (row, self.destination):
-                return True
-        return False
+        return True
 
     def move_hallway(self, burrow: b.Burrow) -> list[tuple[int, b.Burrow]]:
         if self.final(burrow):
@@ -103,5 +100,6 @@ class Amphipod:
         if self.final(burrow):
             return 0
         row, column = self.position
-        distance = row + 1 if column == self.destination else row - 1 + abs(column - self.destination)
+        distance = row + 1 if column == self.destination else row - \
+            1 + abs(column - self.destination)
         return distance * self.energy
