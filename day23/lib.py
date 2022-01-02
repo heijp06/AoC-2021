@@ -16,7 +16,7 @@ def part2(rows: list[str]) -> int | None:
 
 def go(rows: list[str]) -> int | None:
     burrow = parse(rows)
-    burrows = PriorityQueue()
+    burrows: PriorityQueue = PriorityQueue()
     burrows.put((burrow.min_cost_to_solution(), burrow))
     seen = {burrow: 0}
     min_cost = 0 if burrow.final() else None

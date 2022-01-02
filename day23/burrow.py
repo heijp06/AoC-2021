@@ -59,7 +59,7 @@ class Burrow:
         return all(position not in self._amphipods_by_position for position in route)
 
     def min_cost_to_solution(self) -> int:
-        seen = defaultdict(int)
+        seen: defaultdict[str, int] = defaultdict(int)
         result = 0
         for amphipod in self.amphipods:
             cost = amphipod.min_cost_to_column(self)
