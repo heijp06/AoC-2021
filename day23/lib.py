@@ -39,16 +39,16 @@ def go(rows: list[str]) -> int | None:
     return min_cost
 
 
-def move(self: Burrow) -> list[tuple[int, Burrow]]:
-    for amphipod in self.amphipods:
-        burrow = amphipod.move_home(self)
-        if burrow:
-            return [burrow]
+def move(burrow: Burrow) -> list[tuple[int, Burrow]]:
+    for amphipod in burrow.amphipods:
+        new_burrow = amphipod.move_home(burrow)
+        if new_burrow:
+            return [new_burrow]
 
     return [
-        burrow
-        for amphipod in self.amphipods
-        for burrow in amphipod.move_hallway(self)
+        new_burrow
+        for amphipod in burrow.amphipods
+        for new_burrow in amphipod.move_hallway(burrow)
     ]
 
 
