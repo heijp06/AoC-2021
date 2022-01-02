@@ -56,6 +56,12 @@ class Block:
         return merge(self - other + [other])
 
     def __sub__(self, other: Block) -> list[Block]:
+        if (
+            other.x1 < self.x0 or self.x1 < other.x0
+            or other.y1 < self.y0 or self.y1 < other.y0
+            or other.z1 < self.z0 or self.z1 < other.z0
+        ):
+            return [self]
         return merge([
             block
             for (x0, x1) in split(self.x0, self.x1, other.x0, other.x1)
